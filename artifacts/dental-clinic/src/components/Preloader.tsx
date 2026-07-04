@@ -9,12 +9,12 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
       setProgress((p) => {
         if (p >= 100) {
           clearInterval(timer);
-          setTimeout(onComplete, 500);
+          setTimeout(onComplete, 150);
           return 100;
         }
-        return p + Math.floor(Math.random() * 15) + 5;
+        return p + Math.floor(Math.random() * 25) + 20;
       });
-    }, 150);
+    }, 30);
 
     return () => clearInterval(timer);
   }, [onComplete]);
@@ -23,7 +23,7 @@ export function Preloader({ onComplete }: { onComplete: () => void }) {
     <AnimatePresence>
       <motion.div
         className="fixed inset-0 z-[10000] flex flex-col items-center justify-center bg-white"
-        exit={{ opacity: 0, y: -50, transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1] } }}
+        exit={{ opacity: 0, y: -50, transition: { duration: 0.4, ease: [0.76, 0, 0.24, 1] } }}
       >
         <div className="flex flex-col items-center">
           <motion.div

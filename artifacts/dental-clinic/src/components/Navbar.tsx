@@ -1,6 +1,43 @@
 import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+
+function MagneticButton({ children, className, ...props }: React.ButtonHTMLAttributes<HTMLButtonElement> | any) {
+  const ref = React.useRef<HTMLButtonElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const springConfig = { damping: 15, stiffness: 150, mass: 0.5 };
+  const springX = useSpring(x, springConfig);
+  const springY = useSpring(y, springConfig);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLButtonElement>) => {
+    if (!ref.current) return;
+    const rect = ref.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    x.set((e.clientX - centerX) * 0.2);
+    y.set((e.clientY - centerY) * 0.2);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.button
+      ref={ref}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ x: springX, y: springY }}
+      className={`relative inline-flex items-center justify-center overflow-hidden transition-colors ${className}`}
+      {...props}
+    >
+      <span className="relative z-10">{children}</span>
+    </motion.button>
+  );
+}
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -14,35 +51,35 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const links = ['Services', 'About', 'Gallery', 'Team', 'FAQ'];
+  const links = ['Services', 'About', 'Gallery', 'Team', 'Testimonials', 'FAQ'];
 
   return (
     <>
       <header 
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled ? 'glass py-4' : 'bg-transparent py-6'
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
+          scrolled ? 'bg-white/80 backdrop-blur-xl border-b border-slate-200/50 py-4 shadow-sm' : 'bg-transparent py-6'
         }`}
       >
         <div className="container mx-auto px-6 flex items-center justify-between">
-          <div className="text-2xl font-black text-gradient tracking-tight">Lumina</div>
+          <div className="text-3xl font-black text-slate-900 tracking-tight font-display">Lumina</div>
           
-          <nav className="hidden md:flex items-center gap-8 font-medium">
+          <nav className="hidden lg:flex items-center gap-10 font-bold">
             {links.map(link => (
-              <a key={link} href={`#${link.toLowerCase()}`} className="text-slate-700 hover:text-primary transition-colors relative group text-sm uppercase tracking-wider">
+              <a key={link} href={`#${link.toLowerCase()}`} className="text-slate-600 hover:text-primary transition-colors relative group text-xs uppercase tracking-widest">
                 {link}
-                <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
+                <span className="absolute -bottom-2 left-0 w-0 h-0.5 bg-primary transition-all group-hover:w-full"></span>
               </a>
             ))}
           </nav>
           
-          <div className="hidden md:block">
-            <button className="bg-primary text-white px-6 py-2.5 rounded-full text-sm font-bold uppercase tracking-wider hover-elevate hover:shadow-lg hover:shadow-primary/30 transition-all">
+          <div className="hidden lg:block">
+            <MagneticButton className="bg-primary text-white px-8 py-3.5 rounded-full text-sm font-bold uppercase tracking-wider hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20">
               Book Visit
-            </button>
+            </MagneticButton>
           </div>
 
           <button 
-            className="md:hidden text-slate-800"
+            className="lg:hidden text-slate-800 bg-white/50 p-2 rounded-full backdrop-blur-sm border border-slate-200"
             onClick={() => setMobileMenuOpen(true)}
           >
             <Menu size={24} />
@@ -53,31 +90,41 @@ export function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[100] glass-dark flex flex-col items-center justify-center"
+            initial={{ opacity: 0, clipPath: 'circle(0% at 100% 0)' }}
+            animate={{ opacity: 1, clipPath: 'circle(150% at 100% 0)' }}
+            exit={{ opacity: 0, clipPath: 'circle(0% at 100% 0)' }}
+            transition={{ duration: 0.5, ease: 'easeInOut' }}
+            className="fixed inset-0 z-[100] bg-slate-900 flex flex-col items-center justify-center"
           >
             <button 
-              className="absolute top-6 right-6 text-white"
+              className="absolute top-6 right-6 text-white bg-white/10 p-2 rounded-full"
               onClick={() => setMobileMenuOpen(false)}
             >
-              <X size={32} />
+              <X size={24} />
             </button>
             <div className="flex flex-col items-center gap-8">
-              {links.map(link => (
-                <a 
+              {links.map((link, i) => (
+                <motion.a 
                   key={link} 
                   href={`#${link.toLowerCase()}`} 
                   onClick={() => setMobileMenuOpen(false)}
-                  className="text-white text-3xl font-bold uppercase tracking-wider hover:text-primary transition-colors"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 + 0.2 }}
+                  className="text-white text-4xl font-black uppercase tracking-wider hover:text-primary transition-colors font-display"
                 >
                   {link}
-                </a>
+                </motion.a>
               ))}
-              <button className="mt-8 bg-primary text-white px-8 py-4 rounded-full text-xl font-bold uppercase tracking-wider shadow-lg shadow-primary/30">
-                Book Visit
-              </button>
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: links.length * 0.1 + 0.2 }}
+              >
+                <button className="mt-8 bg-primary text-white px-10 py-5 rounded-full text-lg font-bold uppercase tracking-wider shadow-xl shadow-primary/30">
+                  Book Visit
+                </button>
+              </motion.div>
             </div>
           </motion.div>
         )}

@@ -36,3 +36,15 @@ id = "3Szs7zxd9YW9RoNnNVPAM"
 uri = "file://artifacts/dental-clinic/public/tech-1.png"
 type = "image"
 title = "High-tech dental equipment"
+
+[[generated]]
+id = "LIv8V-7WnjlR_ctt1RY9j"
+uri = "file://artifacts/dental-clinic/public/tooth-hero.png"
+type = "image"
+title = "glossy chrome tooth hero"
+
+[[generated]]
+id = "sdB4AL8b9Xg62Oj85uc-x"
+uri = "file://artifacts/dental-clinic/public/tooth-showcase.png"
+type = "image"
+title = "glass tooth showcase"

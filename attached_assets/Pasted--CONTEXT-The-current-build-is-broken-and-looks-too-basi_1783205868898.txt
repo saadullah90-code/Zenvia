@@ -1,0 +1,102 @@
+⚠️ CONTEXT
+
+The current build is broken and looks too basic/generic. Specifically:
+
+
+The 3D floating tooth section (Three.js) is not rendering correctly — it shows an empty dark section with a tiny floating cube instead of the intended 3D tooth model.
+The overall typography, spacing, and visual hierarchy look flat, generic, and template-like — NOT premium.
+The design does not have enough contrast, depth, or "wow factor" compared to the reference attached (a dark glossy hero with a large chrome/glass tooth+implant render, bold oversized typography, and a black contrast section).
+
+
+FIX THIS. Do not attempt complex custom Three.js/WebGL 3D modeling again — it keeps failing to render properly. Replace it with a more reliable, still-premium approach described below.
+
+
+✅ 1. REMOVE BROKEN 3D, REPLACE WITH RELIABLE ALTERNATIVE
+
+
+Delete the current custom Three.js 3D tooth scene and the broken empty dark section.
+Replace it with ONE of these (in order of preference):
+
+A high-quality pre-rendered PNG/WebP image of a glossy chrome/glass dental implant + tooth (transparent background), animated with GSAP/Framer Motion: floating up-down loop, slight rotation on scroll, mouse-parallax tilt (using simple CSS transform: translate/rotate — NOT WebGL).
+A Spline 3D embed (spline.design) — Spline scenes are lightweight, reliable, and embed easily via iframe or @splinetool/react-spline package. This gives real interactive 3D without custom Three.js code breaking.
+If neither is possible, use a Lottie animation of a rotating/glowing tooth.
+
+
+
+The hero must visually match the reference: large glossy tooth/implant object as the focal point, floating with soft shadow/glow beneath it, subtle particle or light-ray background.
+
+
+
+✅ 2. TYPOGRAPHY OVERHAUL (CRITICAL)
+
+Current typography is weak and generic. Fix with:
+
+
+Heading font: Use a bold, tight, modern geometric/grotesk font — e.g. "Neue Montreal", "General Sans", "Switzer", or "Clash Display" (all free, available via Fontshare.com). Use HEAVY/BOLD weight for headlines with tight letter-spacing (-0.02em) and large font sizes (64–96px on desktop for hero headline).
+Body font: Pair with a clean readable sans like "Inter" or "General Sans Regular".
+Increase font-size contrast between headline and body text — headline should dominate the hero (like the reference "Exceptional Dental Care & Straight Smile" treatment — big, confident, slightly overlapping the visual).
+Reduce line-height on large headings (1.0–1.1) for a tighter, more editorial look.
+Use consistent type scale across the site (define scale: 96/64/48/32/24/18/16/14).
+
+
+
+✅ 3. COLOR & THEME FIX
+
+
+Keep the white/blue base BUT add more depth and contrast:
+
+Hero background: soft blue-to-white gradient (matching reference) OR a deep navy/black hero (like reference's dark contrast section) — pick ONE strong direction, don't mix weak pastel tones everywhere.
+Add at least one full dark section (near-black, #0A0E1A or similar) for contrast — e.g. the "specialties" or "why choose us" section — with white/light-blue text and glossy image cards, exactly like the reference's black feature block.
+Glossy blue accent color: use a richer, more saturated blue (#0B63F6 / #2563EB) for buttons/highlights, not a washed-out pastel blue.
+Add subtle noise/grain texture or soft gradient blur blobs in the background for depth — flat white backgrounds look cheap.
+
+
+
+
+
+
+✅ 4. LAYOUT & SPACING FIX
+
+
+Increase whitespace between sections (current layout feels cramped and cards feel empty/unfinished — the "Comprehensive Care" cards have too much empty space with no visual content, just icon + text floating awkwardly).
+Every card (services, team, testimonials) needs either an icon animation, small illustration, or subtle background pattern — not just plain text in empty boxes.
+Stats section (15k+, 20+ years) should be styled like the reference: large bold numbers, small uppercase label underneath, tight spacing, positioned inline with a supporting image (not floating alone).
+Fix the broken/empty section entirely — no section should ever render as blank space.
+Team photos: use consistent aspect ratio, add a subtle glossy border/glow ring on hover, add a soft gradient overlay at the bottom of each photo for text legibility.
+Footer: keep dark navy, ensure "Developed by BranX" is styled distinctly (small caps, subtle blue glow on hover), positioned bottom-right or center.
+
+
+
+✅ 5. ANIMATION — KEEP THESE, THEY'RE GOOD (but polish further)
+
+
+Keep GSAP ScrollTrigger scroll-reveal animations — they're working — but tune the easing to power3.out or expo.out for a smoother premium feel.
+Add magnetic hover effect on all buttons (button slightly follows cursor within its bounds).
+Add smooth scroll (Lenis) if not already active — check that scroll feels buttery, not default browser scroll.
+Testimonials/patient stories section is duplicated in the current build ("Patient Stories" appears twice) — remove the duplicate.
+Add subtle image reveal animation (clip-path wipe) on the before/after slider and team images when they scroll into view.
+
+
+
+✅ 6. GENERAL QUALITY BAR
+
+Compare every section against the attached reference screenshot before considering it "done." Ask:
+
+
+Does this look like a $10,000 agency-built site, or a free template?
+Is there enough contrast and visual hierarchy to guide the eye?
+Does every section feel intentional, or does it feel like empty placeholder space?
+
+
+Fix any section that fails this test. Do NOT leave any section half-finished, empty, or visually broken like the current 3D section.
+
+
+Priority order to fix:
+
+
+Remove/replace broken 3D section (highest priority — currently broken)
+Fix hero typography + visual to match reference energy
+Add dark contrast section for depth
+Fix spacing/empty card issue in Services section
+Remove duplicate Patient Stories section
+Polish remaining animations and hover states

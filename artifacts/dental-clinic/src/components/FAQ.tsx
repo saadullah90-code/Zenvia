@@ -25,29 +25,31 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-32 bg-slate-50 relative">
+    <section id="faq" className="py-40 bg-slate-50 relative">
       <div className="container mx-auto px-6 max-w-4xl">
-        <div className="text-center mb-16 reveal-up">
-          <h2 className="text-4xl md:text-5xl font-black mb-6 tracking-tight text-slate-900">Common Questions.</h2>
+        <div className="text-center mb-20 reveal-up">
+          <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight text-slate-900 font-display">Common Questions.</h2>
+          <p className="text-xl text-slate-600 font-medium">Everything you need to know about the Lumina experience.</p>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           {faqs.map((faq, idx) => (
             <div 
               key={idx} 
-              className="bg-white rounded-2xl border border-slate-200 overflow-hidden reveal-up transition-shadow hover:shadow-md"
+              className="bg-white rounded-3xl border border-slate-200 overflow-hidden reveal-up transition-all hover:shadow-lg hover:border-primary/30"
               style={{ transitionDelay: `${idx * 100}ms` }}
             >
               <button 
-                className="w-full px-6 py-6 flex items-center justify-between text-left focus:outline-none"
+                className="w-full px-8 py-8 flex items-center justify-between text-left focus:outline-none"
                 onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
               >
-                <span className="text-lg font-bold text-slate-900">{faq.q}</span>
+                <span className="text-xl font-bold text-slate-900 font-display tracking-tight pr-8">{faq.q}</span>
                 <motion.div
                   animate={{ rotate: openIndex === idx ? 180 : 0 }}
                   transition={{ duration: 0.3 }}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 transition-colors ${openIndex === idx ? 'bg-primary text-white' : 'bg-slate-100 text-slate-400'}`}
                 >
-                  <ChevronDown className="text-primary" />
+                  <ChevronDown />
                 </motion.div>
               </button>
               
@@ -59,7 +61,7 @@ export function FAQ() {
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.3, ease: 'easeInOut' }}
                   >
-                    <div className="px-6 pb-6 text-slate-600 leading-relaxed">
+                    <div className="px-8 pb-8 text-slate-600 leading-relaxed font-medium text-lg">
                       {faq.a}
                     </div>
                   </motion.div>
