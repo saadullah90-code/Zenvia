@@ -1,6 +1,6 @@
-# [Project name]
+# Dental Clinic Website
 
-_Replace the heading above with the project's name, and this line with one sentence describing what this app does for users._
+A premium, fully-animated single-page marketing website for a futuristic dental clinic — glossy medical-tech aesthetic with a 3D floating tooth hero, scroll-triggered animations, and buttery smooth scrolling.
 
 ## Run & Operate
 

@@ -1,0 +1,138 @@
+🎯 PROJECT GOAL
+
+Build a $10,000-quality, agency-grade, fully animated dental clinic website that looks like it was designed and built by a team of 10+ senior engineers and a 15+ year experienced UI/UX designer. The final result must feel premium, cinematic, and world-class — NOT like a template, NOT like an AI-generated site, and NOT like a "local business" website. Every single section must be animated, smooth, and buttery — comparable to Awwwards.com Site-of-the-Day winners.
+
+This is a dental clinic website — the entire concept should revolve around teeth, smiles, oral health, and modern dental technology, presented in a futuristic, medical-tech, glossy visual style.
+
+
+🎨 DESIGN DIRECTION
+
+
+Color Theme: Pure White + Deep/Sky Blue gradient combos (e.g. #FFFFFF, #F0F8FF, #0B63F6, #00C2FF, #003D99). Glassmorphism + glossy, glowing, reflective surfaces.
+Style: Modern, clean, medical-tech, glossy 3D, soft shadows, glowing highlights, glassmorphic cards, subtle gradients.
+Feel: High-end, futuristic, trustworthy, clinical yet warm. Think Apple.com + a modern SaaS landing page + a dental brand.
+Typography: Premium modern sans-serif (e.g. "Satoshi", "Clash Display", "General Sans", or "Inter" with heavy/variable weights for headings).
+NO generic Bootstrap look. NO stock "Canva template" feel. NO flat plain design.
+
+
+
+🦷 HERO SECTION (MOST IMPORTANT — SHOWSTOPPER)
+
+
+Full-screen 3D hero section featuring a floating, rotating 3D tooth model (use Three.js / React Three Fiber) with:
+
+Soft glow/reflection, glossy white-blue material (physical/glass material shader)
+Slow continuous floating animation (up-down + slight rotation) using GSAP or Framer Motion
+Mouse-parallax interaction — tooth subtly follows cursor movement
+Particle/glow background (floating bubbles, light rays, or blurred blue orbs)
+
+
+
+Animated headline text with staggered character/word reveal (GSAP SplitText or Framer Motion stagger)
+CTA buttons with glossy glassmorphic style, hover glow + scale animation
+Scroll-down indicator with subtle bounce animation
+Smooth entrance animation on page load (preloader transition into hero)
+
+
+
+⚙️ TECH STACK (MANDATORY)
+
+
+Frontend: React (or Next.js) + TypeScript
+Styling: TailwindCSS (custom design tokens, no default look)
+Animation Libraries:
+
+GSAP (with ScrollTrigger, SplitText, Timeline) — for scroll-based, timeline, and micro animations
+Framer Motion — for component transitions, hover states, page transitions
+React Three Fiber + Drei (Three.js) — for the 3D floating tooth / 3D dental models
+Lenis / Locomotive Scroll — for buttery smooth scrolling (smooth scroll is MANDATORY)
+
+
+
+Icons: Lucide-react or custom SVG icon set (no generic clipart)
+Fonts: Google Fonts premium pairing or self-hosted variable fonts
+Forms: React Hook Form + validation (Zod)
+Performance: Lazy loading, code splitting, optimized images (WebP/AVIF), Lighthouse score 90+
+
+
+
+📄 REQUIRED PAGES / SECTIONS (Single Page or Multi-Page — Single scrolling page preferred with anchor navigation)
+
+
+Preloader — animated logo/tooth loading screen (progress bar or morphing shape), smooth fade into hero
+Sticky Navbar — glassmorphic, transparent-to-white on scroll, smooth underline hover animations, mobile hamburger with full-screen animated menu
+Hero Section — as described above
+About / Why Choose Us — animated stats counter (e.g. "15,000+ Happy Patients", "20+ Years Experience"), scroll-reveal cards
+Services Section — animated interactive cards (Teeth Whitening, Braces/Orthodontics, Root Canal, Implants, Cosmetic Dentistry, Pediatric Dentistry, etc.) with hover 3D tilt effect, icon animations
+Interactive 3D Tooth/Smile Showcase — scroll-triggered animation where a 3D tooth/jaw model rotates/explodes into layers as user scrolls (GSAP ScrollTrigger pinned section) — signature "wow" moment of the site
+Before/After Smile Gallery — animated image comparison slider with scroll reveal
+Meet Our Dentists / Team Section — animated profile cards, hover flip/reveal effect, glossy circular photo frames with glow ring
+Testimonials — auto-scrolling / draggable carousel with smooth transitions, glassmorphic quote cards
+Technology/Equipment Section — animated icons/illustrations of modern dental tech, alternating zig-zag scroll animations
+Appointment Booking Section — glossy animated form (Name, Phone, Service, Date/Time) with micro-interactions, success animation on submit
+FAQ Section — animated accordion (smooth height/opacity transition)
+Blog/Tips Preview (optional) — animated cards
+CTA Banner — full-width glossy gradient section with animated background blobs, "Book Your Free Consultation" button
+Footer — dark blue/glossy gradient footer with:
+
+Clinic info, quick links, social icons (animated hover)
+Newsletter signup
+Bottom line must clearly display: "Developed by BranX" (styled distinctly, small but visible, right or center-aligned, subtle hover glow effect on the text)
+
+
+
+
+
+
+🎬 ANIMATION REQUIREMENTS (CRITICAL — NON-NEGOTIABLE)
+
+
+Every section must have scroll-triggered entrance animations (fade+slide+scale combos, staggered children) via GSAP ScrollTrigger
+Smooth scroll across the entire site (Lenis) — no default browser scroll jump
+Cursor-based micro-interactions (custom animated cursor recommended — a small glowing dot/ring cursor)
+Page transition animations between sections/routes
+Hover states on ALL interactive elements: buttons, cards, images, nav links — scale, glow, tilt, or magnetic-button effect
+Parallax layers in hero and showcase sections
+Number counters animate when scrolled into view
+Smooth image reveal (clip-path / mask animation) on scroll for gallery and about images
+All animations must use easing curves (e.g. power3.out, expo.inOut) — NOT linear/default easing
+60fps performance target — animations must be GPU-accelerated (transform/opacity based, not layout-based)
+
+
+
+📱 RESPONSIVENESS & PERFORMANCE
+
+
+Fully responsive: mobile, tablet, laptop, large desktop — pixel-perfect on all breakpoints
+3D elements must degrade gracefully on low-end mobile devices (reduce particle count / simplify geometry on mobile)
+Fast load time: optimize 3D models (low-poly), compress assets, use next/image or equivalent
+No layout shift (CLS), no janky scroll, no flash of unstyled content
+Test on Chrome, Safari, Firefox, Edge
+
+
+
+🚫 STRICTLY AVOID
+
+
+Generic template look (no default Bootstrap/Tailwind starter feel)
+Flat, boring, static sections with no motion
+Cheap stock icons or plain clipart-style tooth illustrations
+Low-quality free stock photos — use high-quality dental/medical imagery or custom illustrations
+Any "AI-generated" or "made in 5 minutes" appearance — this must look hand-crafted by a professional agency
+Overly simple fade-in-only animations — animations should have depth, easing, and personality
+
+
+
+✅ FINAL DELIVERABLE EXPECTATIONS
+
+
+The website should feel like a $10,000 premium agency build, on par with top dental/medical brands and Awwwards-level sites
+Every scroll should reveal something new and delightful
+The 3D floating tooth hero + scroll-triggered 3D showcase section are the signature "wow" features
+Footer must contain "Developed by BranX"
+Code should be clean, modular, componentized (reusable components for cards, buttons, sections)
+Include comments in code for maintainability
+
+
+
+Build this as a complete, production-ready, fully functional website — not a mockup. Implement real working animations (GSAP + Framer Motion + Three.js), not placeholder CSS transitions.

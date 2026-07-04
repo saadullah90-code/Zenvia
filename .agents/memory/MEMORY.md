@@ -1,0 +1,1 @@
+- [react-three with React 19](react-three-react19.md) — on React 19 use @react-three/fiber@^9 + drei@^10; drei v10 drops PresentationControls `config`/object `snap`.

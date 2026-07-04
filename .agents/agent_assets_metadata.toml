@@ -1,0 +1,38 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "jCfRwlXhJ8XHHtik8Dkqg"
+uri = "file://artifacts/dental-clinic/public/hero-bg.png"
+type = "image"
+title = "Futuristic dental clinic abstract background"
+
+[[generated]]
+id = "uKbeM6Mt0ZbSqd2L9w2Oy"
+uri = "file://artifacts/dental-clinic/public/before-teeth.png"
+type = "image"
+title = "Before teeth whitening"
+
+[[generated]]
+id = "CYboXwZLxWk_a99j3OFc5"
+uri = "file://artifacts/dental-clinic/public/after-teeth.png"
+type = "image"
+title = "After teeth whitening"
+
+[[generated]]
+id = "SIkn1R7fPkcI2Iwv_55S_"
+uri = "file://artifacts/dental-clinic/public/team-1.png"
+type = "image"
+title = "Premium dentist portrait 1"
+
+[[generated]]
+id = "kCUyOmO1WKf6VpEPnCndn"
+uri = "file://artifacts/dental-clinic/public/team-2.png"
+type = "image"
+title = "Premium dentist portrait 2"
+
+[[generated]]
+id = "3Szs7zxd9YW9RoNnNVPAM"
+uri = "file://artifacts/dental-clinic/public/tech-1.png"
+type = "image"
+title = "High-tech dental equipment"
