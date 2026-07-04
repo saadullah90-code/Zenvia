@@ -40,32 +40,32 @@ function MagneticButton({ children, className, ...props }: React.ButtonHTMLAttri
 
 export function Footer() {
   return (
-    <footer className="bg-[#0A0E1A] text-white pt-32 pb-12 relative overflow-hidden border-t border-white/10">
+    <footer className="bg-[#0A0E1A] text-white pt-32 pb-12 relative overflow-hidden border-t border-white/5">
       <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/10 rounded-full blur-[150px]" />
+        <div className="absolute top-0 left-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 right-1/4 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-[150px]" />
         <div className="absolute inset-0 bg-noise opacity-[0.03]" />
       </div>
       
       <div className="container mx-auto px-6 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-16 mb-24">
           <div className="col-span-1 md:col-span-2">
-            <h3 className="text-4xl font-black mb-8 text-white font-display tracking-tight drop-shadow-lg">Lumina</h3>
+            <h3 className="text-4xl font-black mb-8 text-white font-display tracking-tight drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]">Lumina</h3>
             <p className="text-slate-400 max-w-md mb-10 text-lg leading-relaxed">
               The future of dentistry is here. Experience world-class care in a premium, stress-free environment.
             </p>
             <div className="flex gap-4">
               {['Twitter', 'Instagram', 'LinkedIn'].map((social) => (
-                <MagneticButton key={social} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-colors shadow-lg">
+                <MagneticButton key={social} className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary/20 hover:border-primary transition-colors shadow-lg hover:shadow-[0_0_20px_rgba(11,99,246,0.3)] group">
                   <span className="sr-only">{social}</span>
-                  <div className="w-4 h-4 bg-white/80" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }} />
+                  <div className="w-4 h-4 bg-white/80 group-hover:bg-white" style={{ clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)' }} />
                 </MagneticButton>
               ))}
             </div>
           </div>
           
           <div>
-            <h4 className="text-xl font-bold mb-8 font-display tracking-wide uppercase">Quick Links</h4>
+            <h4 className="text-xl font-bold mb-8 font-display tracking-wide uppercase text-white">Quick Links</h4>
             <ul className="space-y-4">
               {[
                 { label: 'Services', href: '#services' },
@@ -74,14 +74,14 @@ export function Footer() {
                 { label: 'Contact', href: '#book' },
               ].map((link) => (
                 <li key={link.label}>
-                  <a href={link.href} className="text-slate-400 hover:text-white hover:translate-x-2 transition-all inline-block font-medium">{link.label}</a>
+                  <a href={link.href} className="text-slate-400 hover:text-primary transition-colors inline-block font-medium">{link.label}</a>
                 </li>
               ))}
             </ul>
           </div>
           
           <div>
-            <h4 className="text-xl font-bold mb-8 font-display tracking-wide uppercase">Contact</h4>
+            <h4 className="text-xl font-bold mb-8 font-display tracking-wide uppercase text-white">Contact</h4>
             <ul className="space-y-4 text-slate-400 font-medium">
               <li>123 Innovation Drive</li>
               <li>Tech District, CA 90210</li>
@@ -94,10 +94,10 @@ export function Footer() {
         <div className="border-t border-white/10 pt-10 flex flex-col md:flex-row items-center justify-between">
           <p className="text-slate-500 font-medium">© {new Date().getFullYear()} Lumina Dental. All rights reserved.</p>
           <motion.div 
-            whileHover={{ scale: 1.02 }}
-            className="mt-6 md:mt-0 text-sm font-bold text-slate-400 hover:text-white transition-colors cursor-pointer relative group flex items-center gap-2 uppercase tracking-widest"
+            whileHover={{ scale: 1.05 }}
+            className="mt-6 md:mt-0 text-sm font-bold text-slate-500 hover:text-slate-300 transition-colors cursor-pointer relative group flex items-center gap-2 uppercase tracking-widest"
           >
-            Developed by <span className="text-primary font-black drop-shadow-[0_0_10px_rgba(11,99,246,0.8)] group-hover:drop-shadow-[0_0_20px_rgba(11,99,246,1)] transition-all">BranX</span>
+            Developed by <span className="text-primary font-black drop-shadow-[0_0_10px_rgba(11,99,246,0.6)] group-hover:drop-shadow-[0_0_25px_rgba(11,99,246,1)] group-hover:text-white transition-all duration-300">BranX</span>
           </motion.div>
         </div>
       </div>

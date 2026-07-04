@@ -1,1 +1,2 @@
-- [react-three with React 19](react-three-react19.md) — on React 19 use @react-three/fiber@^9 + drei@^10; drei v10 drops PresentationControls `config`/object `snap`.
+- [Lenis + pinned ScrollTrigger loads page mid-document](lenis-scrolltrigger-load.md) — page loads scrolled down; fix = manual scrollRestoration + reset on every ScrollTrigger 'refresh' until user scrolls + matchMedia-disable pin on mobile.
+- [Prefer pre-rendered PNG over WebGL hero](prerendered-png-vs-webgl-hero.md) — animate a transparent glossy PNG with Framer/GSAP instead of hand-rolled Three.js; don't reintroduce @react-three here.

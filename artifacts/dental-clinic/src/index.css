@@ -19,21 +19,21 @@
 }
 
 :root {
-  --background: 215 40% 98%; 
-  --foreground: 222 47% 7%;
+  --background: 225 45% 6%; /* #0A0E1A */
+  --foreground: 210 40% 98%;
   
-  --border: 214 32% 91%;
-  --input: 214 32% 91%;
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
   --ring: 218 95% 50%; /* #0B63F6 */
   
   --primary: 218 95% 50%; /* #0B63F6 */
   --primary-foreground: 0 0% 100%;
   
-  --muted: 210 40% 96.1%;
-  --muted-foreground: 215.4 16.3% 46.9%;
+  --muted: 225 45% 12%;
+  --muted-foreground: 215.4 16.3% 66.9%;
   
-  --accent: 210 40% 96.1%;
-  --accent-foreground: 222.2 47.4% 11.2%;
+  --accent: 225 45% 12%;
+  --accent-foreground: 210 40% 98%;
 
   --radius: 1.5rem;
 }
@@ -80,19 +80,19 @@
 
 /* Glassmorphism utilities */
 .glass {
-  background: rgba(255, 255, 255, 0.6);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.8);
-  box-shadow: 0 20px 40px 0 rgba(11, 99, 246, 0.05);
-}
-
-.glass-dark {
-  background: rgba(10, 14, 26, 0.7);
+  background: rgba(10, 14, 26, 0.6);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid rgba(255, 255, 255, 0.05);
   box-shadow: 0 20px 40px 0 rgba(0, 0, 0, 0.4);
+}
+
+.glass-dark {
+  background: rgba(10, 14, 26, 0.8);
+  backdrop-filter: blur(32px);
+  -webkit-backdrop-filter: blur(32px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 30px 60px 0 rgba(0, 0, 0, 0.6);
 }
 
 /* Premium text gradients */

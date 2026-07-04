@@ -23,28 +23,35 @@ const team = [
 
 export function Team() {
   useEffect(() => {
-    gsap.utils.toArray('.team-card').forEach((card: any) => {
-      gsap.fromTo(card,
-        { clipPath: 'inset(100% 0 0 0)' },
-        {
-          clipPath: 'inset(0% 0 0 0)',
-          duration: 1.5,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top 85%',
+    const ctx = gsap.context(() => {
+      gsap.utils.toArray('.team-card').forEach((card: any) => {
+        gsap.fromTo(card,
+          { clipPath: 'inset(100% 0 0 0)', y: 50 },
+          {
+            clipPath: 'inset(0% 0 0 0)',
+            y: 0,
+            duration: 1.5,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 85%',
+            }
           }
-        }
-      );
+        );
+      });
     });
+    return () => ctx.revert();
   }, []);
 
   return (
-    <section id="team" className="py-40 bg-slate-50 relative border-t border-slate-200/50">
-      <div className="container mx-auto px-6">
+    <section id="team" className="py-40 bg-[#0A0E1A] relative border-t border-white/5 border-b border-white/5 overflow-hidden">
+      <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
+
+      <div className="container mx-auto px-6 relative z-10">
         <div className="text-center max-w-3xl mx-auto mb-24 reveal-up">
-          <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight text-slate-900 font-display">Meet the Masters.</h2>
-          <p className="text-xl text-slate-600 font-medium">
+          <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight text-white font-display">Meet the <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Masters.</span></h2>
+          <p className="text-xl text-slate-400 font-medium">
             World-renowned specialists dedicated to the art and science of dentistry. 
             Precision crafted by the best in the field.
           </p>
@@ -54,25 +61,25 @@ export function Team() {
           {team.map((member, idx) => (
             <div 
               key={idx}
-              className="team-card group relative rounded-[2.5rem] overflow-hidden glass p-4 bg-white/80 hover:bg-white transition-colors duration-500 shadow-xl"
+              className="team-card group relative rounded-[2.5rem] overflow-hidden glass-dark p-4 hover:bg-[#0f1524] transition-colors duration-500 shadow-2xl border border-white/5 hover:border-primary/30"
             >
-              <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden mb-8">
-                <img src={member.image} alt={member.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="relative aspect-[3/4] rounded-[2rem] overflow-hidden mb-8 bg-[#0A0E1A]">
+                <img src={member.image} alt={member.name} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105 opacity-80 group-hover:opacity-100 filter grayscale-[50%] group-hover:grayscale-0" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0E1A] via-[#0A0E1A]/40 to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                 
                 {/* Glow ring on hover */}
-                <div className="absolute inset-0 border-4 border-primary/0 group-hover:border-primary/50 rounded-[2rem] transition-colors duration-500 z-10" />
+                <div className="absolute inset-0 border-[3px] border-primary/0 group-hover:border-primary/50 rounded-[2rem] transition-colors duration-500 z-10" />
 
                 <div className="absolute bottom-0 left-0 right-0 p-8 translate-y-8 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500 text-white z-20">
-                  <div className="inline-block bg-primary/20 backdrop-blur-md border border-primary/30 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider mb-3">
+                  <div className="inline-block bg-primary/20 backdrop-blur-md border border-primary/50 px-4 py-1.5 rounded-full text-xs font-bold uppercase tracking-wider mb-4 shadow-[0_0_15px_rgba(11,99,246,0.3)]">
                     {member.stats}
                   </div>
-                  <p className="text-lg font-medium leading-relaxed">{member.bio}</p>
+                  <p className="text-lg font-medium leading-relaxed drop-shadow-md">{member.bio}</p>
                 </div>
               </div>
               <div className="text-center px-4 pb-6">
-                <h3 className="text-3xl font-black text-slate-900 mb-2 font-display">{member.name}</h3>
-                <p className="text-primary font-bold tracking-wide uppercase text-sm">{member.role}</p>
+                <h3 className="text-3xl font-black text-white mb-2 font-display tracking-tight group-hover:text-primary transition-colors">{member.name}</h3>
+                <p className="text-slate-400 font-bold tracking-widest uppercase text-xs">{member.role}</p>
               </div>
             </div>
           ))}

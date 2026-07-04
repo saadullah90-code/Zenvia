@@ -46,21 +46,23 @@ export function Testimonials() {
     if (!trackRef.current) return;
 
     // Continuous marquee animation
-    gsap.to(trackRef.current, {
+    const tween = gsap.to(trackRef.current, {
       xPercent: -50,
       ease: "none",
-      duration: 30,
+      duration: 40,
       repeat: -1
     });
+    return () => { tween.kill(); };
   }, []);
 
   return (
-    <section id="testimonials" className="py-40 bg-slate-50 relative overflow-hidden" ref={containerRef}>
-      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[120px] pointer-events-none" />
+    <section id="testimonials" className="py-40 bg-[#05070D] relative overflow-hidden" ref={containerRef}>
+      <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[150px] pointer-events-none" />
+      <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
       
-      <div className="container mx-auto px-6 relative z-10 mb-20 text-center reveal-up">
-        <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight font-display text-slate-900">Patient Stories.</h2>
-        <p className="text-xl text-slate-600 font-medium max-w-2xl mx-auto">
+      <div className="container mx-auto px-6 relative z-10 mb-24 text-center reveal-up">
+        <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight font-display text-white">Patient <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Stories.</span></h2>
+        <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto">
           Don't just take our word for it. Hear what our patients have to say about their transformations.
         </p>
       </div>
@@ -74,26 +76,26 @@ export function Testimonials() {
           {[...testimonials, ...testimonials].map((t, i) => (
             <div 
               key={i} 
-              className="w-[350px] md:w-[450px] shrink-0 glass rounded-[2rem] p-10 hover:-translate-y-2 transition-transform duration-500 cursor-pointer shadow-lg hover:shadow-2xl bg-white/60"
+              className="w-[350px] md:w-[450px] shrink-0 glass-dark rounded-[2.5rem] p-10 hover:-translate-y-4 transition-all duration-500 cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_60px_rgba(11,99,246,0.15)] border border-white/5 hover:border-primary/30"
             >
-              <div className="flex justify-between items-start mb-8">
-                <div className="flex gap-1 text-primary">
+              <div className="flex justify-between items-start mb-10">
+                <div className="flex gap-1 text-primary drop-shadow-[0_0_8px_rgba(11,99,246,0.8)]">
                   {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} size={20} fill="currentColor" />
+                    <Star key={i} size={18} fill="currentColor" />
                   ))}
                 </div>
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 bg-slate-100 px-3 py-1 rounded-full">
+                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-300 bg-white/5 px-4 py-1.5 rounded-full border border-white/10">
                   {t.treatment}
                 </div>
               </div>
-              <p className="text-xl text-slate-700 font-medium mb-10 leading-relaxed">
+              <p className="text-xl text-slate-300 font-medium mb-12 leading-relaxed">
                 "{t.quote}"
               </p>
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-lg">
+              <div className="flex items-center gap-5">
+                <div className="w-14 h-14 rounded-full bg-primary/20 flex items-center justify-center text-primary font-black text-xl border border-primary/30 shadow-[0_0_15px_rgba(11,99,246,0.2)]">
                   {t.name.charAt(0)}
                 </div>
-                <p className="font-bold text-slate-900 tracking-wide text-lg">{t.name}</p>
+                <p className="font-bold text-white tracking-wide text-lg font-display">{t.name}</p>
               </div>
             </div>
           ))}
