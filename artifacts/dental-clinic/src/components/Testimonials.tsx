@@ -12,7 +12,7 @@ const reviews = [
     name: 'James Carter',
     role: 'Implant patient',
     img: '/dentist-portrait.jpg',
-    text: 'I was nervous about implants, but Denta Care explained every step. The result feels exactly like my own teeth.',
+    text: 'I was nervous about implants, but Zenvia explained every step. The result feels exactly like my own teeth.',
   },
   {
     name: 'Amelia Brooks',

@@ -24,7 +24,7 @@ export function Treatments() {
             </h2>
           </div>
           <p className="text-muted-foreground max-w-sm">
-            At Denta Care, we offer a wide range of treatments — from routine cleanings and fillings
+            At Zenvia, we offer a wide range of treatments — from routine cleanings and fillings
             to advanced implants and cosmetic dentistry. Personalized care for all your dental needs.
           </p>
         </div>

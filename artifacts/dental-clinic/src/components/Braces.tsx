@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
-import { Sparkles, Clock, Smile, ArrowUpRight } from 'lucide-react';
+import { Sparkles, Clock, Smile } from 'lucide-react';
+import { SparkleButton } from '@/components/SparkleButton';
 
 const features = [
   { icon: Smile, title: 'Invisible aligners', text: 'Clear, removable trays that straighten discreetly.' },
@@ -58,13 +59,9 @@ export function Braces() {
               ))}
             </div>
 
-            <a
-              href="#contact"
-              className="mt-9 inline-flex items-center gap-2 bg-primary text-primary-foreground px-7 py-4 rounded-full font-bold shadow-glow-blue hover:-translate-y-0.5 transition-transform"
-            >
+            <SparkleButton href="#contact" className="mt-9">
               Start your alignment
-              <ArrowUpRight size={18} />
-            </a>
+            </SparkleButton>
           </div>
         </div>
       </div>

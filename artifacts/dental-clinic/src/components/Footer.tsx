@@ -1,4 +1,4 @@
-import { ArrowUpRight } from 'lucide-react';
+import { SparkleButton } from '@/components/SparkleButton';
 
 const cols = [
   { title: 'Treatments', links: ['General Dentistry', 'Teeth Whitening', 'Implants', 'Braces & Aligners'] },
@@ -12,20 +12,17 @@ export function Footer() {
       <div className="container mx-auto px-5">
         <div className="grid lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-12">
           <div>
-            <div className="flex items-center gap-1 text-3xl tracking-tight">
-              <span className="font-extrabold text-primary">Denta</span>
-              <span className="font-extrabold text-white">Care</span>
+            <div className="flex items-center text-3xl tracking-tight">
+              <span className="font-extrabold text-primary">Zen</span>
+              <span className="font-extrabold text-white">via</span>
             </div>
             <p className="mt-5 text-white/60 max-w-xs leading-relaxed">
               Premium dental care that blends advanced technology with a warm, personal touch.
               Because every smile matters.
             </p>
-            <a
-              href="#contact"
-              className="mt-7 inline-flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 rounded-full font-bold shadow-glow-orange hover:-translate-y-0.5 transition-transform"
-            >
-              Book Appointment <ArrowUpRight size={17} />
-            </a>
+            <SparkleButton href="#contact" className="mt-7">
+              Book Appointment
+            </SparkleButton>
           </div>
 
           {cols.map((c) => (
@@ -45,7 +42,7 @@ export function Footer() {
         </div>
 
         <div className="mt-16 pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-white/50 text-sm">© {new Date().getFullYear()} Denta Care. All rights reserved.</p>
+          <p className="text-white/50 text-sm">© {new Date().getFullYear()} Zenvia. All rights reserved.</p>
           <p className="text-sm font-semibold text-white/60">
             Developed by{' '}
             <span className="font-extrabold text-primary drop-shadow-[0_0_12px_rgba(20,160,230,0.9)]">

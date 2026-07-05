@@ -39,13 +39,13 @@ export function About() {
               transition={{ delay: 0.05 }}
               className="text-5xl md:text-6xl font-extrabold text-foreground -mt-2"
             >
-              Denta <span className="text-primary">Care</span>
+              Zen<span className="text-primary">via</span>
             </motion.h2>
 
             <div className="mt-8 max-w-md">
               <p className="text-sm font-bold uppercase tracking-[0.25em] text-accent mb-3">Our Vision</p>
               <p className="text-muted-foreground leading-relaxed">
-                At Denta Care, our vision is to blend advanced technology with compassionate care to
+                At Zenvia, our vision is to blend advanced technology with compassionate care to
                 create a welcoming space. We aim to inspire confident, healthy smiles through
                 innovation and treatment personalized to every patient.
               </p>

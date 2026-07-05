@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Phone, Mail, MapPin, Clock, ArrowUpRight, Check } from 'lucide-react';
+import { Phone, Mail, MapPin, Clock, Check } from 'lucide-react';
 
 const services = ['General Check-up', 'Teeth Whitening', 'Braces & Aligners', 'Dental Implants', 'Root Canal', 'Kids Dentistry'];
 
@@ -35,7 +35,7 @@ export function Contact() {
               <div className="mt-10 space-y-4">
                 {[
                   { icon: Phone, label: '+44 20 1234 5678' },
-                  { icon: Mail, label: 'hello@dentacare.com' },
+                  { icon: Mail, label: 'hello@zenvia.com' },
                   { icon: MapPin, label: '12 Smile Street, London, UK' },
                   { icon: Clock, label: 'Open daily · 10:00 AM – 07:00 PM' },
                 ].map((c) => (
@@ -85,17 +85,18 @@ export function Contact() {
 
                 <button
                   type="submit"
-                  className={`mt-2 inline-flex items-center justify-center gap-2 px-7 py-4 rounded-full font-bold text-white transition-all ${
-                    sent ? 'bg-primary' : 'bg-accent shadow-glow-orange hover:-translate-y-0.5'
-                  }`}
+                  className={`sparkle-btn mt-2 w-full sm:w-auto ${sent ? 'pointer-events-none' : ''}`}
                 >
                   {sent ? (
                     <>
-                      <Check size={18} /> Request received
+                      <Check size={18} /> <span className="text">Request received</span>
                     </>
                   ) : (
                     <>
-                      Book Appointment <ArrowUpRight size={18} />
+                      <svg viewBox="0 0 24 24" width="20" height="20" className="sparkle" aria-hidden="true">
+                        <path d="M10,21.236,6.755,14.745.264,11.5,6.755,8.255,10,1.764l3.245,6.491L19.736,11.5l-6.491,3.245ZM18,21l1.5,3L21,21l3-1.5L21,18l-1.5-3L18,18l-3,1.5ZM19.333,4.667,20.5,7l1.167-2.333L24,3.5,21.667,2.333,20.5,0,19.333,2.333,17,3.5Z" />
+                      </svg>
+                      <span className="text">Book Appointment</span>
                     </>
                   )}
                 </button>

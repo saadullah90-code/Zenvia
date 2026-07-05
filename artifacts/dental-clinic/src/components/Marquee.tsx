@@ -1,6 +1,6 @@
 import { Plus } from 'lucide-react';
 
-const items = ['Braces', 'Denta Care', 'Dentist', 'Dentures', 'Implants', 'Whitening', 'Aligners'];
+const items = ['Braces', 'Zenvia', 'Dentist', 'Dentures', 'Implants', 'Whitening', 'Aligners'];
 
 export function Marquee() {
   const row = [...items, ...items];

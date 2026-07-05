@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { SparkleButton } from '@/components/SparkleButton';
 
 const links = [
   { label: 'Home', href: '#home' },
@@ -36,9 +37,9 @@ export function Navbar() {
                 : 'px-2 py-1'
             }`}
           >
-            <a href="#home" className="flex items-center gap-1 text-2xl tracking-tight">
-              <span className="font-extrabold text-primary">Denta</span>
-              <span className="font-extrabold text-foreground">Care</span>
+            <a href="#home" className="flex items-center text-2xl tracking-tight">
+              <span className="font-extrabold text-primary">Zen</span>
+              <span className="font-extrabold text-foreground">via</span>
             </a>
 
             <nav className="hidden lg:flex items-center gap-9">
@@ -54,13 +55,9 @@ export function Navbar() {
               ))}
             </nav>
 
-            <a
-              href="#contact"
-              className="hidden lg:inline-flex items-center gap-2 bg-accent text-accent-foreground px-6 py-3 rounded-full text-sm font-bold shadow-glow-orange hover:brightness-105 hover:-translate-y-0.5 transition-all"
-            >
+            <SparkleButton href="#contact" size="sm" className="hidden lg:inline-flex">
               Book Appointment
-              <ArrowUpRight size={17} />
-            </a>
+            </SparkleButton>
 
             <button
               className="lg:hidden text-foreground bg-white/80 p-2.5 rounded-full border border-white shadow-soft"
@@ -103,17 +100,9 @@ export function Navbar() {
                   {l.label}
                 </motion.a>
               ))}
-              <motion.a
-                href="#contact"
-                onClick={() => setOpen(false)}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: links.length * 0.08 + 0.15 }}
-                className="mt-6 inline-flex items-center gap-2 bg-accent text-accent-foreground px-9 py-4 rounded-full text-lg font-bold shadow-glow-orange"
-              >
+              <SparkleButton href="#contact" size="lg" className="mt-6" onClick={() => setOpen(false)}>
                 Book Appointment
-                <ArrowUpRight size={20} />
-              </motion.a>
+              </SparkleButton>
             </div>
           </motion.div>
         )}
