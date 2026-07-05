@@ -1,77 +1,87 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown } from 'lucide-react';
+import { Plus } from 'lucide-react';
 
 const faqs = [
   {
-    q: "Does laser teeth whitening hurt?",
-    a: "Not at all. Our advanced laser whitening system is designed to be completely painless, minimizing sensitivity while maximizing results in just one session."
+    q: 'How often should I visit the dentist?',
+    a: 'For most patients we recommend a check-up and clean every six months. If you are undergoing treatment we will tailor a schedule that suits you.',
   },
   {
-    q: "Do you offer financing options?",
-    a: "Yes, we believe premium dental care should be accessible. We offer flexible 0% interest financing plans tailored to your budget."
+    q: 'Do you offer painless treatments?',
+    a: 'Yes. We use modern anaesthetic techniques and gentle technology so the vast majority of our procedures are completely comfortable.',
   },
   {
-    q: "How often should I have a professional cleaning?",
-    a: "We recommend a comprehensive cleaning and checkup every 6 months to maintain optimal oral health and catch potential issues early."
+    q: 'Are clear aligners as effective as braces?',
+    a: 'For most alignment cases, clear aligners deliver excellent results while staying virtually invisible. Our orthodontists will advise the best option for your smile.',
   },
   {
-    q: "Are invisible aligners faster than traditional braces?",
-    a: "In many cases, yes. Our custom aligner treatments often achieve results in 6-12 months, depending on the complexity of your case."
-  }
+    q: 'What are your opening hours?',
+    a: 'Our clinics are open from 10:00 AM to 07:00 PM, and we offer flexible appointment slots throughout the week.',
+  },
+  {
+    q: 'Do you treat children?',
+    a: 'Absolutely. Our kids dentistry team creates a calm, friendly experience so children build healthy habits and positive memories.',
+  },
 ];
 
 export function FAQ() {
-  const [openIndex, setOpenIndex] = useState<number | null>(0);
+  const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="py-40 bg-[#05070D] relative overflow-hidden">
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[1000px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
+    <section id="faq" className="relative py-24 md:py-32 bg-white overflow-hidden">
+      <div className="container mx-auto px-5">
+        <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-14">
+          <div>
+            <p className="text-sm font-bold uppercase tracking-[0.25em] text-accent mb-3">FAQ</p>
+            <h2 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight">
+              Questions,<br />answered
+            </h2>
+            <p className="mt-5 text-muted-foreground max-w-xs">
+              Can't find what you're looking for? Our friendly team is always happy to help.
+            </p>
+          </div>
 
-      <div className="container mx-auto px-6 max-w-4xl relative z-10">
-        <div className="text-center mb-20 reveal-up">
-          <h2 className="text-5xl md:text-7xl font-black mb-6 tracking-tight text-white font-display">Common <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Questions.</span></h2>
-          <p className="text-xl text-slate-400 font-medium">Everything you need to know about the Lumina experience.</p>
-        </div>
-
-        <div className="space-y-6">
-          {faqs.map((faq, idx) => (
-            <div 
-              key={idx} 
-              className="bg-[#0A0E1A]/80 backdrop-blur-md rounded-3xl border border-white/5 overflow-hidden reveal-up transition-all hover:shadow-[0_0_30px_rgba(11,99,246,0.1)] hover:border-primary/30"
-              style={{ transitionDelay: `${idx * 100}ms` }}
-            >
-              <button 
-                className="w-full px-8 py-8 flex items-center justify-between text-left focus:outline-none group"
-                onClick={() => setOpenIndex(openIndex === idx ? null : idx)}
-              >
-                <span className="text-xl font-bold text-white font-display tracking-tight pr-8 group-hover:text-primary transition-colors">{faq.q}</span>
-                <motion.div
-                  animate={{ rotate: openIndex === idx ? 180 : 0 }}
-                  transition={{ duration: 0.3 }}
-                  className={`w-12 h-12 rounded-full flex items-center justify-center shrink-0 transition-colors ${openIndex === idx ? 'bg-primary text-white shadow-[0_0_20px_rgba(11,99,246,0.4)]' : 'bg-white/5 text-slate-400 border border-white/10 group-hover:bg-white/10'}`}
+          <div className="space-y-4">
+            {faqs.map((f, i) => {
+              const isOpen = open === i;
+              return (
+                <div
+                  key={f.q}
+                  className={`rounded-3xl border transition-colors ${
+                    isOpen ? 'border-primary bg-primary/5' : 'border-border bg-background'
+                  }`}
                 >
-                  <ChevronDown size={20} />
-                </motion.div>
-              </button>
-              
-              <AnimatePresence>
-                {openIndex === idx && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: 'auto', opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.3, ease: 'easeInOut' }}
+                  <button
+                    onClick={() => setOpen(isOpen ? null : i)}
+                    className="w-full flex items-center justify-between gap-4 text-left p-6"
                   >
-                    <div className="px-8 pb-8 text-slate-400 leading-relaxed font-medium text-lg border-t border-white/5 pt-6 mt-2">
-                      {faq.a}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          ))}
+                    <span className="text-lg font-extrabold text-foreground">{f.q}</span>
+                    <span
+                      className={`shrink-0 w-9 h-9 rounded-full flex items-center justify-center transition-all ${
+                        isOpen ? 'bg-primary text-white rotate-45' : 'bg-white text-primary border border-border'
+                      }`}
+                    >
+                      <Plus size={18} />
+                    </span>
+                  </button>
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.3, ease: 'easeInOut' }}
+                        className="overflow-hidden"
+                      >
+                        <p className="px-6 pb-6 text-muted-foreground leading-relaxed">{f.a}</p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>

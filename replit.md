@@ -1,43 +1,39 @@
-# Dental Clinic Website
+# Denta Care Website
 
-A premium, fully-animated single-page marketing website for a futuristic dental clinic — glossy medical-tech aesthetic with a 3D floating tooth hero, scroll-triggered animations, and buttery smooth scrolling.
+A premium, fully-animated single-page marketing website for the "Denta Care" dental clinic — a bright, glossy medical aesthetic on a light-blue theme, with a glossy 3D-style molar tooth composited inside a royal-blue liquid splash in the hero, a persistent tooth that travels down the page on scroll, scroll-triggered reveals, and buttery Lenis smooth scrolling.
 
 ## Run & Operate
 
-- `pnpm --filter @workspace/api-server run dev` — run the API server (port 5000)
+- `pnpm --filter @workspace/dental-clinic run dev` — run the site (workflow `artifacts/dental-clinic: web`)
+- `pnpm --filter @workspace/dental-clinic run typecheck` — typecheck the site (use this, NOT `build`)
 - `pnpm run typecheck` — full typecheck across all packages
-- `pnpm run build` — typecheck + build all packages
-- `pnpm --filter @workspace/api-spec run codegen` — regenerate API hooks and Zod schemas from the OpenAPI spec
-- `pnpm --filter @workspace/db run push` — push DB schema changes (dev only)
-- Required env: `DATABASE_URL` — Postgres connection string
+- `pnpm run build` — typecheck + build all packages (needs workflow-provided PORT/BASE_PATH)
 
 ## Stack
 
-- pnpm workspaces, Node.js 24, TypeScript 5.9
-- API: Express 5
-- DB: PostgreSQL + Drizzle ORM
-- Validation: Zod (`zod/v4`), `drizzle-zod`
-- API codegen: Orval (from OpenAPI spec)
-- Build: esbuild (CJS bundle)
+- pnpm workspaces, Node.js 24, TypeScript 5.9, Vite + React
+- Animation: GSAP (+ ScrollTrigger), Framer Motion, Lenis smooth scroll
+- Styling: Tailwind v4 (no config file; theme via `@theme inline` + `:root` tokens in `src/index.css`)
+- Font: Manrope (heading 800, body 500) via Google Fonts link in `index.html`
 
 ## Where things live
 
-- `artifacts/dental-clinic/` — the "Lumina" single-page marketing site (react-vite, slug `@workspace/dental-clinic`, previewPath `/`, no backend).
-  - `src/pages/Home.tsx` — page shell: Lenis smooth scroll, the persistent traveling-tooth scroll system, deterministic top-load, and section ordering.
-  - `src/components/` — one file per section (Navbar, Showcase3D, Services, SmileGallery, Team, Testimonials, AppointmentForm, FAQ, Footer, Preloader, CustomCursor).
-  - `src/index.css` — dark theme tokens (`#0A0E1A`/`#05070D` bg, `primary` blue), glass/noise utilities.
-  - `public/` — `tooth-1/2/3.png` (transparent traveling-tooth angles), `testi-1/2/3.png` portraits, `tech-1.png`.
+- `artifacts/dental-clinic/` — the "Denta Care" single-page marketing site (react-vite, slug `@workspace/dental-clinic`, previewPath `/`, no backend).
+  - `src/pages/Home.tsx` — page shell: hero, the persistent desktop-only traveling-tooth scroll system, Lenis + GSAP ticker, deterministic load-at-top, and section ordering.
+  - `src/components/` — one file per section: Navbar, Preloader, Marquee, About, Problems, Braces, Treatments, Testimonials, FAQ, Contact, Footer.
+  - `src/index.css` — light theme HSL tokens (light-blue background, `primary` blue ~#14a0e6, `accent` orange ~#ff5a1e), Manrope, marquee/glass/shadow utilities.
+  - `public/` — `tooth-hero.png` (glossy white molar, transparent), `splash-blue.png` (royal-blue liquid splash, transparent), `braces.png`, plus stock JPGs (clinic-interior, patient-smiling, dentist-portrait, healthy-smile, teeth-cleaning).
 
 ## Architecture decisions
 
-- No Three.js / WebGL. The hero centerpiece is a pre-rendered transparent glossy tooth PNG animated with GSAP + Framer Motion (simpler, lighter, no react-three version pitfalls).
-- One persistent tooth (fixed, `pointer-events-none`, z-30) travels the whole page. Its motion is anchored to per-section scrub ScrollTriggers (not one global timeline), so the pinned Showcase (`end: '+=150%'`) can't desync it. See `.agents/memory/persistent-scroll-tooth.md`.
-- GSAP scroll transforms and Framer mouse-tilt live on separate nested nodes to avoid fighting over the CSS `transform` property.
-- Lenis smooth scroll driven by the GSAP ticker; manual `scrollRestoration` + refresh-reset guarantees the page loads at hero top.
+- No Three.js / WebGL. The hero centerpiece is a pre-rendered transparent glossy tooth PNG composited inside a transparent splash PNG, animated with GSAP + Framer Motion (simpler, lighter, no react-three version pitfalls).
+- Hero tooth + splash are one perfectly-aligned unit: a fixed, viewport-centered container (`hidden md:flex items-center justify-center`) holds the splash behind and the tooth in front. On scroll the splash fades out (it belongs to the hero) while the tooth travels DOWN the viewport (monotonically increasing `y`) with horizontal sway, driven by a scrubbed GSAP timeline over the whole page. Desktop-only via `gsap.matchMedia('(min-width: 768px)')`; mobile shows a static composited tooth+splash in the hero flow. See `.agents/memory/persistent-scroll-tooth.md`.
+- GSAP scroll transforms and Framer mouse-tilt live on separate nested nodes to avoid fighting over the CSS `transform` property (GSAP on `toothOuter`, Framer `rotateX/rotateY` on an inner `motion.div`).
+- Lenis smooth scroll driven by the GSAP ticker; manual `scrollRestoration` + `scrollTo(0,0)` guarantees the page loads at hero top.
 
 ## Product
 
-A premium, fully-animated one-page site for the fictional "Lumina" dental clinic: cinematic hero, about/stats, services, a pinned 3D-style showcase, before/after smile gallery, team, testimonials (portrait marquee + ratings), appointment form, and FAQ. Purely presentational — no backend, forms are non-submitting UI.
+A premium, fully-animated one-page site for the fictional "Denta Care" clinic. Hero: light-blue background, huge two-tone "EVERY SMILE MATTERS" headline, glossy molar in a blue splash, a left white info card (description + "We're Open 10:00 AM – 07:00 PM" + orange Book Appointment button), and right-side stats (150+ Expert Dentists, 20+ Dental Clinics across UK, 03+ Countries). Then a scrolling marquee, About/Our Vision, Problems-with-Solutions, Braces, Treatments/Services, Testimonials, FAQ, and Contact. Purely presentational — no backend, forms are non-submitting UI.
 
 ## User preferences
 
@@ -45,10 +41,12 @@ A premium, fully-animated one-page site for the fictional "Lumina" dental clinic
 - Keep the Footer "Developed by BranX" glow credit.
 - Aim for $10k / Awwwards-caliber quality: heavy, polished, continuous scroll animation; treat the whole page as one continuous story, not stacked sections.
 - No Three.js / WebGL for the hero — use the pre-rendered PNG approach.
+- Font must be Manrope (heading 800, body 500). Colors: primary blue ~#14a0e6, accent orange ~#ff5a1e.
 
 ## Gotchas
 
-- Traveling-tooth PNGs must have a real alpha channel. Generate renders on FLAT WHITE (no gradient/bokeh/floor shadow) then remove the background; dark-gradient/bokeh backgrounds can't be keyed and leave a visible box. Verify with `identify -format '%[channels] %[pixel:p{2,2}]' file.png` (want `srgba` + `srgba(0,0,0,0)`). The image viewer renders transparent on white, so it can't confirm transparency — use `identify` or a screenshot over the dark page.
+- Transparent PNGs (tooth, splash) must have a real alpha channel. Generate renders on FLAT WHITE (no gradient/bokeh/floor shadow) then remove the background; dark/bokeh backgrounds can't be keyed and leave a visible box. Verify with `identify -format '%[channels] %[pixel:p{2,2}]' file.png` (want `srgba` + `srgba(0,0,0,0)`). The image viewer renders transparent on white, so it can't confirm transparency — use `identify` or a screenshot over a colored page.
+- The Preloader overlays the page for ~0.5s on load, so screenshots taken immediately after a restart catch it mid-animation. To verify the hero, temporarily set `useState(false)` for `loading` in `Home.tsx`, screenshot, then restore `useState(true)`.
 - No emojis anywhere in this site (explicit user preference).
 - Keep the Footer "Developed by BranX" glow credit.
 - Verify with `pnpm --filter @workspace/dental-clinic run typecheck`, not `build` (build needs workflow-provided PORT/BASE_PATH).

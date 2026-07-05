@@ -1,126 +1,63 @@
-import React, { useEffect, useRef } from 'react';
-import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { Star } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Star, Quote } from 'lucide-react';
 
-gsap.registerPlugin(ScrollTrigger);
-
-const testimonials = [
+const reviews = [
   {
-    name: "Sarah L.",
-    quote: "The most comfortable dental experience I've ever had. The laser whitening was completely painless and the results are stunning.",
-    rating: 5,
-    treatment: "Laser Whitening",
-    image: "/testi-1.png"
+    name: 'Sarah Mitchell',
+    role: 'Invisalign patient',
+    img: '/patient-smiling.jpg',
+    text: 'The whole team made me feel completely at ease. My aligners were painless and my smile has never looked better.',
   },
   {
-    name: "James D.",
-    quote: "From the futuristic waiting room to the precision of the treatments, everything here feels lightyears ahead of normal clinics.",
-    rating: 5,
-    treatment: "Full Restoration",
-    image: "/testi-2.png"
+    name: 'James Carter',
+    role: 'Implant patient',
+    img: '/dentist-portrait.jpg',
+    text: 'I was nervous about implants, but Denta Care explained every step. The result feels exactly like my own teeth.',
   },
   {
-    name: "Emily R.",
-    quote: "I used to have severe dental anxiety, but the team here completely changed my perspective. Truly a premium experience.",
-    rating: 5,
-    treatment: "General Care",
-    image: "/testi-3.png"
+    name: 'Amelia Brooks',
+    role: 'Whitening patient',
+    img: '/healthy-smile.jpg',
+    text: 'Modern, spotless clinic and genuinely caring staff. My whitening results were incredible in a single visit.',
   },
-  {
-    name: "Michael T.",
-    quote: "Got my invisible aligners here. The 3D scanning process was quick, and the results have exceeded my expectations.",
-    rating: 5,
-    treatment: "Orthodontics",
-    image: "/testi-2.png"
-  },
-  {
-    name: "Jessica W.",
-    quote: "Every detail is thoughtfully designed. It doesn't even feel like a dental clinic, more like a luxury spa.",
-    rating: 5,
-    treatment: "Cosmetic",
-    image: "/testi-1.png"
-  }
 ];
 
 export function Testimonials() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const trackRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!trackRef.current) return;
-
-    const ctx = gsap.context(() => {
-      // Continuous marquee animation
-      gsap.to(trackRef.current, {
-        xPercent: -50,
-        ease: "none",
-        duration: 40,
-        repeat: -1
-      });
-
-      // Simple stagger reveal for the cards when entering view
-      gsap.fromTo('.testi-card-reveal',
-        { y: 60, opacity: 0 },
-        {
-          y: 0, opacity: 1, duration: 1, stagger: 0.1, ease: 'power3.out',
-          scrollTrigger: {
-            trigger: trackRef.current,
-            start: 'top 80%'
-          }
-        }
-      );
-    });
-
-    return () => ctx.revert();
-  }, []);
-
   return (
-    <section id="testimonials" className="py-40 bg-[#05070D] relative overflow-hidden" ref={containerRef}>
-      <div className="absolute top-0 right-1/4 w-[800px] h-[800px] bg-primary/10 rounded-full blur-[150px] pointer-events-none" />
-      <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
-      
-      <div className="container mx-auto px-6 relative z-10 mb-24 text-center reveal-up">
-        <h2 className="text-5xl md:text-7xl font-black mb-8 tracking-tight font-display text-white">Patient <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Stories.</span></h2>
-        <p className="text-xl text-slate-400 font-medium max-w-2xl mx-auto">
-          Don't just take our word for it. Hear what our patients have to say about their transformations.
-        </p>
-      </div>
+    <section id="testimonials" className="relative py-24 md:py-32 bg-background overflow-hidden">
+      <div className="container mx-auto px-5">
+        <div className="text-center max-w-2xl mx-auto mb-16">
+          <p className="text-sm font-bold uppercase tracking-[0.25em] text-accent mb-3">Testimonials</p>
+          <h2 className="text-4xl md:text-6xl font-extrabold text-foreground leading-tight">
+            Smiles that speak <span className="text-primary">for us</span>
+          </h2>
+        </div>
 
-      <div className="relative z-10 flex overflow-hidden w-full group py-8">
-        <div 
-          ref={trackRef}
-          className="flex gap-8 px-4 w-[200%] md:w-max shrink-0"
-        >
-          {/* Duplicate the array to create a seamless loop */}
-          {[...testimonials, ...testimonials].map((t, i) => (
-            <div 
-              key={i} 
-              className="testi-card-reveal w-[350px] md:w-[450px] shrink-0 glass-dark rounded-[2.5rem] p-10 hover:-translate-y-4 transition-all duration-500 cursor-pointer shadow-[0_20px_40px_rgba(0,0,0,0.5)] hover:shadow-[0_20px_60px_rgba(11,99,246,0.15)] border border-white/5 hover:border-primary/30"
+        <div className="grid md:grid-cols-3 gap-6">
+          {reviews.map((r, i) => (
+            <motion.div
+              key={r.name}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.12 }}
+              className="relative rounded-3xl bg-white border border-border p-8 shadow-soft"
             >
-              <div className="flex justify-between items-start mb-10">
-                <div className="flex gap-1 text-primary drop-shadow-[0_0_8px_rgba(11,99,246,0.8)]">
-                  {[...Array(t.rating)].map((_, i) => (
-                    <Star key={i} size={18} fill="currentColor" />
-                  ))}
-                </div>
-                <div className="text-[10px] font-bold uppercase tracking-widest text-slate-300 bg-white/5 px-4 py-1.5 rounded-full border border-white/10">
-                  {t.treatment}
-                </div>
+              <Quote className="text-primary/20 absolute top-6 right-6" size={44} />
+              <div className="flex gap-1 mb-5">
+                {Array.from({ length: 5 }).map((_, s) => (
+                  <Star key={s} size={18} className="fill-accent text-accent" />
+                ))}
               </div>
-              <p className="text-xl text-slate-300 font-medium mb-12 leading-relaxed">
-                "{t.quote}"
-              </p>
-              <div className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-primary/30 shadow-[0_0_15px_rgba(11,99,246,0.2)]">
-                  <img src={t.image} alt={t.name} className="w-full h-full object-cover" />
-                </div>
+              <p className="text-foreground/80 leading-relaxed relative z-10">"{r.text}"</p>
+              <div className="flex items-center gap-3 mt-7 pt-6 border-t border-border">
+                <img src={r.img} alt={r.name} className="w-12 h-12 rounded-full object-cover" />
                 <div>
-                  <p className="font-bold text-white tracking-wide text-lg font-display">{t.name}</p>
-                  <p className="text-xs text-slate-400 font-bold tracking-widest uppercase">Verified Patient</p>
+                  <p className="font-extrabold text-foreground text-sm">{r.name}</p>
+                  <p className="text-xs text-muted-foreground">{r.role}</p>
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

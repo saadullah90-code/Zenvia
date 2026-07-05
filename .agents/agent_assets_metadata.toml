@@ -1,5 +1,4 @@
 uploads = []
-outputs = []
 
 [[generated]]
 id = "jCfRwlXhJ8XHHtik8Dkqg"
@@ -41,7 +40,7 @@ title = "High-tech dental equipment"
 id = "LIv8V-7WnjlR_ctt1RY9j"
 uri = "file://artifacts/dental-clinic/public/tooth-hero.png"
 type = "image"
-title = "glossy chrome tooth hero"
+title = "glossy white molar tooth"
 
 [[generated]]
 id = "sdB4AL8b9Xg62Oj85uc-x"
@@ -84,3 +83,45 @@ id = "FiPMOOlKAAhaZvUQ2eKp0"
 uri = "file://artifacts/dental-clinic/public/testi-3.png"
 type = "image"
 title = "Testimonial profile 3"
+
+[[generated]]
+id = "3TQMaSAjO7kEzNEfsTQd2"
+uri = "file://artifacts/dental-clinic/public/splash-blue.png"
+type = "image"
+title = "royal blue paint splash"
+
+[[generated]]
+id = "QZanc3fFB11sUnhQ1CZs2"
+uri = "file://artifacts/dental-clinic/public/braces.png"
+type = "image"
+title = "clear dental braces aligner"
+
+[[outputs]]
+id = "uGbF-wdumnx1F-HMuoz0L"
+uri = "file://attached_assets/stock_images/clinic_interior.jpg"
+type = "image"
+title = "modern bright dental clinic interior treatment room white and blue"
+
+[[outputs]]
+id = "JSQuajEkzqN-ww4A-2X3A"
+uri = "file://attached_assets/stock_images/patient_smiling.jpg"
+type = "image"
+title = "happy woman patient smiling in dentist chair bright clinic"
+
+[[outputs]]
+id = "22PD94WhMZlP3WYkBCVGU"
+uri = "file://attached_assets/stock_images/dentist_portrait.jpg"
+type = "image"
+title = "professional female dentist portrait smiling white coat clinic"
+
+[[outputs]]
+id = "s6mHS_2kJPfrk3oTc92T9"
+uri = "file://attached_assets/stock_images/healthy_smile.jpg"
+type = "image"
+title = "close up healthy white smile teeth woman"
+
+[[outputs]]
+id = "0LrgfkG18-6fIYQu-egMC"
+uri = "file://attached_assets/stock_images/teeth_cleaning.jpg"
+type = "image"
+title = "dental hygienist cleaning teeth modern equipment"

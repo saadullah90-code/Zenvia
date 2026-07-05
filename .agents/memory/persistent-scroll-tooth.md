@@ -18,3 +18,12 @@ If GSAP animates `x/y/scale/rotate` on the SAME node Framer Motion drives via `s
 
 ## Angle morphs
 Crossfade between 2–3 angle PNGs with `ScrollTrigger.create({ trigger, start:'top center', onEnter/onLeaveBack })` toggling opacity — cleaner than baking opacity beats into the scrub timeline.
+
+## When there is NO pinned section, a single global scrub timeline is fine
+The section-anchored rule above exists to survive a pinned section. Once the pin is removed (e.g. hero has no pinned Showcase), one global timeline `{ trigger: main, start:'top top', end:'bottom bottom', scrub:1, invalidateOnRefresh:true }` with sequential `.to()` waypoints is simpler and robust. Use function-based values (`y: () => window.innerHeight * 0.3`) + `invalidateOnRefresh` so positions recompute on resize.
+
+## "Travel DOWN" must be a monotonic y increase, not sway around center
+A fixed, viewport-centered object with only tiny ±y offsets reads as side-to-side drift, NOT descent — architect will flag this as failing a "tooth comes down on scroll" requirement. Make `y` increase monotonically across the timeline (e.g. 0 → 0.12vh → 0.22 → 0.30 → 0.36) with horizontal sway as the SECONDARY motion.
+
+## Compositing a hero object inside a backdrop (tooth-in-splash)
+To align a foreground PNG perfectly inside a backdrop PNG (tooth inside a liquid splash), put BOTH in the same fixed viewport-centered box (`fixed inset-0 flex items-center justify-center` → sized relative box). The backdrop is `absolute inset-0`; the moving object sits in an inner absolutely-centered node that GSAP transforms. On scroll, fade the backdrop out (it belongs to the hero) via its own scrub trigger while the object travels. This guarantees pixel-alignment without guesswork. Keep it desktop-only (`hidden md:flex`) and render a static composited copy in the hero flow for mobile.
