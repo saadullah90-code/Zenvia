@@ -25,6 +25,7 @@
 
   --font-sans: 'Manrope', ui-sans-serif, system-ui, sans-serif;
   --font-display: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+  --font-serif: 'Playfair Display', ui-serif, Georgia, serif;
 }
 
 :root {
@@ -90,12 +91,51 @@
   -webkit-text-fill-color: transparent;
 }
 
+/* Elegant serif display (for the hero background typography) */
+.font-serif-display {
+  font-family: var(--font-serif);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* ---- Premium glassmorphism cards ---- */
+/* Sheen is folded into the background (top layer) so it never breaks
+   absolutely-positioned children the way a ::before overlay would. */
 .glass-card {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.9);
-  box-shadow: 0 30px 60px -20px rgba(20, 100, 180, 0.25);
+  position: relative;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0) 42%),
+    linear-gradient(155deg, rgba(255, 255, 255, 0.82) 0%, rgba(255, 255, 255, 0.5) 100%);
+  backdrop-filter: blur(22px) saturate(165%);
+  -webkit-backdrop-filter: blur(22px) saturate(165%);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow:
+    0 22px 48px -20px rgba(20, 100, 180, 0.35),
+    inset 0 1px 0 0 rgba(255, 255, 255, 0.95),
+    inset 0 -1px 0 0 rgba(20, 100, 180, 0.06);
+}
+
+/* Hero info card: on mobile the tooth's splash sits behind it, so make the
+   glass nearly opaque there to keep copy readable; stays translucent on desktop. */
+@media (max-width: 767px) {
+  .hero-info-card {
+    background:
+      linear-gradient(180deg, rgba(255, 255, 255, 0.72) 0%, rgba(255, 255, 255, 0.4) 42%),
+      linear-gradient(155deg, rgba(255, 255, 255, 0.97) 0%, rgba(255, 255, 255, 0.9) 100%);
+  }
+}
+
+/* Glow for interactive glass cards. The lift (translateY) is owned by Framer's
+   whileHover on motion cards so there is a single, deterministic transform author;
+   this rule only animates the shadow/glow to avoid transform contention. */
+.glass-hover {
+  transition: box-shadow 550ms ease, background 300ms ease;
+}
+.glass-hover:hover {
+  box-shadow:
+    0 34px 60px -22px rgba(20, 100, 180, 0.45),
+    inset 0 1px 0 0 rgba(255, 255, 255, 1),
+    0 0 0 1px rgba(255, 255, 255, 0.9);
 }
 
 .shadow-soft {

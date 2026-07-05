@@ -1,4 +1,1 @@
-- [Lenis + pinned ScrollTrigger loads page mid-document](lenis-scrolltrigger-load.md) — page loads scrolled down; fix = manual scrollRestoration + reset on every ScrollTrigger 'refresh' until user scrolls + matchMedia-disable pin on mobile.
-- [Prefer pre-rendered PNG over WebGL hero](prerendered-png-vs-webgl-hero.md) — animate a transparent glossy PNG with Framer/GSAP instead of hand-rolled Three.js; don't reintroduce @react-three here.
-- [Persistent scroll-driven hero object](persistent-scroll-tooth.md) — anchor a fixed traveling object to per-section scrub triggers (not global fractions); split GSAP vs Framer transforms onto separate nodes; mm.revert() in cleanup.
-- [Keying product renders to transparent](keying-product-renders.md) — generate on FLAT WHITE (no gradient/bokeh/floor shadow) then remove-bg; dark-gradient/bokeh backgrounds can't be keyed and leave visible boxes.
+- [Zenvia glass & hero serif](glass-and-hero-typography.md) — glass sheen folded into `background` (no `::before`), glass needs a tinted bg not white, one transform-author per node (Framer lift vs CSS glow).

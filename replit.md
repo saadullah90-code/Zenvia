@@ -1,6 +1,6 @@
 # Zenvia Website
 
-A premium, fully-animated single-page marketing website for the "Zenvia" dental clinic — a bright, glossy medical aesthetic on a light-blue theme, with a glossy 3D-style molar tooth composited inside a royal-blue liquid splash in the hero, a persistent tooth that travels/rotates down the page on scroll, scroll-triggered reveals, and buttery Lenis smooth scrolling. All CTAs are a blue "sparkle" pill button.
+A premium, fully-animated single-page marketing website for the "Zenvia" dental clinic — a bright, glossy medical aesthetic on a light-blue theme, with a glossy 3D-style molar tooth composited inside a royal-blue liquid splash in the hero, giant serif "Smile Matters" background typography behind the tooth, a persistent tooth that travels down the page and rotates back to fully upright by the footer, site-wide premium glassmorphism cards, scroll-triggered reveals, and buttery Lenis smooth scrolling. All CTAs are a blue "sparkle" pill button.
 
 ## Run & Operate
 
@@ -14,21 +14,23 @@ A premium, fully-animated single-page marketing website for the "Zenvia" dental 
 - pnpm workspaces, Node.js 24, TypeScript 5.9, Vite + React
 - Animation: GSAP (+ ScrollTrigger), Framer Motion, Lenis smooth scroll
 - Styling: Tailwind v4 (no config file; theme via `@theme inline` + `:root` tokens in `src/index.css`)
-- Font: Manrope (heading 800, body 500) via Google Fonts link in `index.html`
+- Font: Manrope (heading 800, body 500) + Playfair Display (serif, hero background typography) via Google Fonts link in `index.html`
 
 ## Where things live
 
 - `artifacts/dental-clinic/` — the "Zenvia" single-page marketing site (react-vite, slug `@workspace/dental-clinic`, previewPath `/`, no backend).
   - `src/pages/Home.tsx` — page shell: hero, the persistent traveling+rotating-tooth scroll system (runs on BOTH desktop and mobile), Lenis + GSAP ticker, deterministic load-at-top, and section ordering.
   - `src/components/` — one file per section: Navbar, Preloader, Marquee, About, Problems, Braces, Treatments, Testimonials, FAQ, Contact, Footer, plus `SparkleButton.tsx` (reusable blue sparkle CTA).
-  - `src/index.css` — light theme HSL tokens (light-blue background, `primary` blue ~#14a0e6, `accent` also blue `221 83% 53%` — NO orange), Manrope, marquee/glass/shadow utilities, and `.sparkle-btn` (+ `--sm`/`--lg`) blue-gradient button styles.
+  - `src/index.css` — light theme HSL tokens (light-blue background, `primary` blue ~#14a0e6, `accent` also blue `221 83% 53%` — NO orange), Manrope, `--font-serif`/`.font-serif-display`, premium `.glass-card` (multi-layer bg with folded-in sheen, blur+saturate) + `.glass-hover` (glow only — lift is Framer's), `.hero-info-card` mobile-opaque override, marquee/shadow utilities, and `.sparkle-btn` (+ `--sm`/`--lg`) blue-gradient button styles.
   - `public/` — `tooth-hero.png` (glossy white molar, transparent), `splash-blue.png` (royal-blue liquid splash, transparent), `braces.png`, plus stock JPGs (clinic-interior, patient-smiling, dentist-portrait, healthy-smile, teeth-cleaning).
 
 ## Architecture decisions
 
 - No Three.js / WebGL. The hero centerpiece is a pre-rendered transparent glossy tooth PNG composited inside a transparent splash PNG, animated with GSAP + Framer Motion (simpler, lighter, no react-three version pitfalls).
 - Hero tooth + splash are one perfectly-aligned unit: a fixed, viewport-centered container (shown on ALL devices) holds the splash behind and the tooth in front. On load the splash POPS up from behind (Framer spring) and the tooth DROPS in from the top (Framer, gated on `!loading`), settling with a slight rest tilt. On scroll the splash fades out (it belongs to the hero) while the tooth travels DOWN the viewport (monotonically increasing `y`) with horizontal sway and rotates (0→270deg), driven by a scrubbed GSAP timeline. Same animation on mobile via a `gsap.matchMedia` `{isDesktop,isMobile}` branch that tunes `kx`/base scale/travel opacity; the fixed layer is `pointer-events-none` and hero card/stats sit at `z-40` so copy stays readable/clickable. See `.agents/memory/persistent-scroll-tooth.md`.
-- GSAP scroll transforms and Framer intro/tilt/idle motion live on separate nested nodes to avoid fighting over the CSS `transform` property (GSAP on `toothOuter`, Framer drop/tilt on inner `motion.div`s).
+- GSAP scroll transforms and Framer intro/tilt/idle motion live on separate nested nodes to avoid fighting over the CSS `transform` property (GSAP on `toothOuter`, Framer drop/tilt on inner `motion.div`s). Same rule for cards: the hover LIFT is Framer `whileHover={{ y: -6 }}` while `.glass-hover` animates only the shadow/glow — one transform author per node. The splash pop (Framer wrapper) is split from its scroll-fade (GSAP on the inner `img`) so opacity/transform never conflict; the splash fades out/in smoothly on scroll.
+- The scroll tooth ends its journey rotated to 360deg (fully upright, x:0) at the footer, so it visually returns to its original starting orientation.
+- Glassmorphism reads poorly on pure white, so card-hosting sections use the light-blue `bg-background` (not `bg-white`); the glass sheen is folded into the `background` shorthand (no `::before`) so it never overrides `position:absolute` on children.
 - Lenis smooth scroll driven by the GSAP ticker; manual `scrollRestoration` + `scrollTo(0,0)` guarantees the page loads at hero top.
 
 ## Product

@@ -30,7 +30,7 @@ const pairs = [
 
 export function Problems() {
   return (
-    <section id="problems" className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <section id="problems" className="relative py-24 md:py-32 bg-background overflow-hidden">
       <div className="absolute inset-0 bg-dots opacity-60 pointer-events-none" />
       <div className="container mx-auto px-5 relative">
         <div className="max-w-2xl mb-16">
@@ -52,7 +52,8 @@ export function Problems() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.08 }}
-              className="group relative rounded-3xl border border-border bg-background overflow-hidden shadow-soft"
+              whileHover={{ y: -6 }}
+              className="group relative rounded-3xl overflow-hidden glass-card glass-hover"
             >
               <div className="grid sm:grid-cols-2">
                 {/* Problem */}

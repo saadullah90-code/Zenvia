@@ -41,7 +41,8 @@ export function Testimonials() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.12 }}
-              className="relative rounded-3xl bg-white border border-border p-8 shadow-soft"
+              whileHover={{ y: -6 }}
+              className="relative rounded-3xl p-8 glass-card glass-hover"
             >
               <Quote className="text-primary/20 absolute top-6 right-6" size={44} />
               <div className="flex gap-1 mb-5">

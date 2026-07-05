@@ -70,19 +70,22 @@ export function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className={`relative rounded-3xl overflow-hidden shadow-soft group ${
+                whileHover={{ y: -6 }}
+                className={`group relative rounded-3xl p-1.5 glass-card glass-hover ${
                   i % 2 === 0 ? 'mt-0' : 'mt-8'
                 }`}
               >
-                <img
-                  src={t.img}
-                  alt={t.label}
-                  className="w-full h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                <span className="absolute bottom-3 left-3 bg-white/90 backdrop-blur px-4 py-1.5 rounded-full text-xs font-bold text-primary shadow">
-                  {t.label}
-                </span>
+                <div className="relative rounded-[1.4rem] overflow-hidden">
+                  <img
+                    src={t.img}
+                    alt={t.label}
+                    className="w-full h-56 md:h-64 object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-primary/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="absolute bottom-3 left-3 bg-white/80 backdrop-blur-md border border-white/60 px-4 py-1.5 rounded-full text-xs font-bold text-primary shadow">
+                    {t.label}
+                  </span>
+                </div>
               </motion.div>
             ))}
           </div>

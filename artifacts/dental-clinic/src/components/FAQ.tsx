@@ -29,7 +29,7 @@ export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
 
   return (
-    <section id="faq" className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <section id="faq" className="relative py-24 md:py-32 bg-background overflow-hidden">
       <div className="container mx-auto px-5">
         <div className="grid lg:grid-cols-[0.8fr_1.2fr] gap-14">
           <div>
@@ -48,8 +48,8 @@ export function FAQ() {
               return (
                 <div
                   key={f.q}
-                  className={`rounded-3xl border transition-colors ${
-                    isOpen ? 'border-primary bg-primary/5' : 'border-border bg-background'
+                  className={`rounded-3xl glass-card transition-all ${
+                    isOpen ? 'ring-1 ring-primary/50' : ''
                   }`}
                 >
                   <button

@@ -22,10 +22,10 @@ export function Braces() {
             className="relative"
           >
             <div className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-full bg-primary/20 blur-3xl" />
-            <div className="relative rounded-[2.5rem] bg-gradient-to-br from-white to-primary/10 border border-white p-8 shadow-soft">
+            <div className="relative rounded-[2.5rem] p-8 glass-card">
               <img src="/braces.png" alt="Clear dental aligners and braces" className="w-full drop-shadow-2xl" />
             </div>
-            <div className="absolute -bottom-5 -left-5 bg-white rounded-2xl shadow-soft px-5 py-4 border border-border">
+            <div className="absolute -bottom-5 -left-5 rounded-2xl px-5 py-4 glass-card">
               <p className="text-3xl font-extrabold text-primary leading-none">98%</p>
               <p className="text-xs font-semibold text-muted-foreground mt-1">patient satisfaction</p>
             </div>
@@ -50,7 +50,8 @@ export function Braces() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="rounded-2xl bg-white border border-border p-5 shadow-soft"
+                  whileHover={{ y: -6 }}
+                  className="rounded-2xl p-5 glass-card glass-hover"
                 >
                   <f.icon className="text-primary mb-3" size={24} />
                   <h4 className="font-extrabold text-foreground text-sm">{f.title}</h4>

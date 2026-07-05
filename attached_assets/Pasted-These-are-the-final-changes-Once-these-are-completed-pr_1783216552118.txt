@@ -1,0 +1,46 @@
+These are the final changes. Once these are completed properly, the website should be finished.
+
+### Tooth Animation
+
+* The tooth rotation is working well now.
+* However, by the time it reaches the footer, it should smoothly return to its original upright position, just like it appeared at the beginning of the website.
+* Do not let it remain tilted or rotated at the end.
+
+### Glassmorphism Cards
+
+* Apply a premium glossy/glassmorphism effect to **every card** across the website.
+* All cards should have a consistent high-end glass look with subtle transparency, blur, lighting, and smooth hover effects.
+
+### Splash Animation
+
+* The splash effect looks good now.
+* The only issue is that when scrolling, it disappears abruptly.
+* Instead, it should fade out smoothly.
+* When the user scrolls back up, the splash animation should appear again with the same smooth transition.
+
+### Background Text Behind the Tooth
+
+* I'm providing a reference image.
+* Please recreate the large background typography behind the tooth in the same style as the reference.
+* Replace the text with only:
+  **"Smile Matters"**
+* Match the same premium typography, scale, opacity, and visual style shown in the reference.
+
+### Mobile Responsiveness (Very Important)
+
+* The mobile version is still not properly responsive.
+* Please make the entire website fully responsive.
+* Every section should match the desktop version as closely as possible.
+* The layout, spacing, typography, images, and animations should all be optimized for mobile.
+
+### Mobile Animations
+
+* The tooth animation is not working correctly on mobile.
+* The splash animation also has issues on mobile.
+* In some places, the tooth is not even visible.
+* Fix all mobile animation problems.
+* The same animations, effects, and visual experience available on desktop should also work smoothly on mobile, with appropriate performance optimizations if necessary.
+
+### Final Note
+
+Please implement every change carefully and professionally. Pay close attention to all the details mentioned above. The desktop and mobile versions should both feel polished, premium, smooth, and consistent in terms of design, animations, and user experience.

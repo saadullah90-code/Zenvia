@@ -55,7 +55,7 @@ export function Contact() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="bg-white rounded-3xl p-7 md:p-8 shadow-soft"
+              className="glass-card rounded-3xl p-7 md:p-8"
             >
               <div className="grid gap-4">
                 <div className="grid sm:grid-cols-2 gap-4">

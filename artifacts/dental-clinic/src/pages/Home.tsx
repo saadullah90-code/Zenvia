@@ -91,23 +91,31 @@ export default function Home() {
           const vw = () => window.innerWidth;
           const vh = () => window.innerHeight;
 
-          const kx = isDesktop ? 0.3 : 0.2; // horizontal sway
-          const s0 = isDesktop ? 1 : 0.82; // base scale
-          const op = isDesktop ? 1 : 0.5; // travel opacity (softer on mobile for readability)
+          const kx = isDesktop ? 0.3 : 0.22; // horizontal sway
+          const s0 = isDesktop ? 1 : 0.9; // base scale
+          const op = isDesktop ? 1 : 0.85; // travel opacity (kept high so the tooth stays visible on mobile)
 
           gsap.set(outer, { x: 0, y: 0, rotate: 0, scale: s0, opacity: 1 });
 
-          // Splash belongs to the hero — pop is handled by Framer; fade it out as we leave
+          // Splash belongs to the hero — smoothly fade it out as the hero leaves,
+          // and it fades back in when scrolling back up (scrub reverses automatically).
           if (splashRef.current) {
             gsap.to(splashRef.current, {
               opacity: 0,
-              scale: 0.7,
-              ease: 'none',
-              scrollTrigger: { trigger: '#home', start: 'top top', end: 'bottom top', scrub: 1 },
+              scale: 0.78,
+              ease: 'power1.inOut',
+              scrollTrigger: {
+                trigger: '#home',
+                start: 'top top',
+                end: 'bottom 30%',
+                scrub: 1.2,
+                invalidateOnRefresh: true,
+              },
             });
           }
 
-          // Tooth travels DOWN the page (monotonic y), sways side to side, and rotates continuously
+          // Tooth travels DOWN the page (monotonic y), sways side to side, rotates continuously,
+          // and returns to a fully upright position (360deg) by the footer — just like it started.
           const tl = gsap.timeline({
             scrollTrigger: {
               trigger: mainRef.current,
@@ -118,11 +126,11 @@ export default function Home() {
             },
           });
 
-          tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.12, rotate: 45, scale: s0 * 0.82, opacity: op, ease: 'none' })
-            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.22, rotate: 95, scale: s0 * 0.74, opacity: op, ease: 'none' })
-            .to(outer, { x: () => -vw() * (kx * 0.9), y: () => vh() * 0.3, rotate: 150, scale: s0 * 0.66, opacity: op, ease: 'none' })
-            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.36, rotate: 210, scale: s0 * 0.6, opacity: op, ease: 'none' })
-            .to(outer, { x: 0, y: () => vh() * 0.32, rotate: 270, scale: s0 * 0.64, opacity: op, ease: 'none' });
+          tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.12, rotate: 50, scale: s0 * 0.84, opacity: op, ease: 'none' })
+            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.22, rotate: 120, scale: s0 * 0.76, opacity: op, ease: 'none' })
+            .to(outer, { x: () => -vw() * (kx * 0.9), y: () => vh() * 0.3, rotate: 195, scale: s0 * 0.68, opacity: op, ease: 'none' })
+            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 285, scale: s0 * 0.66, opacity: op, ease: 'none' })
+            .to(outer, { x: 0, y: () => vh() * 0.3, rotate: 360, scale: s0 * 0.72, opacity: op, ease: 'power2.out' });
 
           return () => {
             gsap.set(outer, { clearProps: 'all' });
@@ -152,21 +160,25 @@ export default function Home() {
 
       {/* Fixed tooth + splash unit (all devices) — splash pops up, tooth drops from top, travels + rotates */}
       <div
-        className="fixed inset-0 z-30 pointer-events-none flex justify-center items-start pt-[19vh] md:items-center md:pt-0"
+        className="fixed inset-0 z-30 pointer-events-none flex justify-center items-start pt-[11vh] md:items-center md:pt-0"
         style={{ perspective: 1000 }}
       >
-        <div className="relative w-[76vw] max-w-[360px] md:max-w-[460px] lg:max-w-[520px] aspect-square">
-          {/* Splash — pops up from behind on load */}
-          <motion.img
-            ref={splashRef}
-            src="/splash-blue.png"
-            alt=""
-            aria-hidden
+        <div className="relative w-[74vw] max-w-[330px] sm:max-w-[400px] md:max-w-[460px] lg:max-w-[520px] aspect-square">
+          {/* Splash — Framer pops it up from behind on load; GSAP fades it on scroll (separate nodes, no transform conflict) */}
+          <motion.div
             initial={{ scale: 0.2, opacity: 0 }}
             animate={loading ? {} : { scale: 1, opacity: 1 }}
             transition={{ type: 'spring', stiffness: 130, damping: 12, delay: 0.25 }}
-            className="absolute inset-0 w-full h-full object-contain"
-          />
+            className="absolute inset-0"
+          >
+            <img
+              ref={splashRef}
+              src="/splash-blue.png"
+              alt=""
+              aria-hidden
+              className="w-full h-full object-contain"
+            />
+          </motion.div>
 
           {/* GSAP-controlled travel/rotate node */}
           <div ref={toothOuter} className="absolute inset-0 flex items-center justify-center">
@@ -203,28 +215,29 @@ export default function Home() {
         <div className="absolute inset-0 bg-gradient-to-b from-[#d7ecfb] via-[#eaf5fd] to-background" />
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[85vw] h-[55vh] bg-[#bfe3fb] rounded-full blur-[130px] opacity-70" />
 
-        <div className="container mx-auto px-5 relative z-10 flex-1 flex flex-col">
-          {/* Headline (sits behind the tooth) */}
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={loading ? {} : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-            className="relative z-0 text-center font-extrabold uppercase leading-[0.85] tracking-tighter text-[13vw] sm:text-7xl lg:text-8xl xl:text-9xl"
-          >
-            <span className="text-primary/25">Every</span>{' '}
-            <span className="text-gradient">Smile Matters</span>
-          </motion.h1>
+        {/* Giant serif background typography behind the tooth (reference-style) */}
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={loading ? {} : { opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          className="pointer-events-none absolute inset-x-0 top-[10vh] md:top-1/2 md:-translate-y-1/2 z-0 flex flex-col items-center text-center leading-[0.76] select-none"
+        >
+          <span className="font-serif-display uppercase text-[27vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/40 via-primary/20 to-primary/[0.06]">
+            Smile
+          </span>
+          <span className="font-serif-display uppercase text-[27vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/30 via-primary/15 to-primary/[0.04] -mt-[0.14em]">
+            Matters
+          </span>
+        </motion.h1>
 
-          {/* Spacer where the floating tooth lives */}
-          <div className="flex-1 min-h-[42vh] md:min-h-[34vh]" />
-
+        <div className="container mx-auto px-5 relative z-10 flex-1 flex flex-col justify-end">
           {/* Info card + stats (above the tooth) */}
           <div className="grid lg:grid-cols-2 gap-8 items-end mt-auto relative z-40">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={loading ? {} : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="glass-card rounded-3xl p-7 max-w-md"
+              className="glass-card hero-info-card rounded-3xl p-7 max-w-md"
             >
               <p className="text-foreground/70 font-semibold leading-relaxed">
                 Our skilled dentists use advanced technology to offer complete care in a comfortable

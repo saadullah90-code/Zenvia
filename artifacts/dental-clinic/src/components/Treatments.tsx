@@ -14,7 +14,7 @@ const treatments = [
 
 export function Treatments() {
   return (
-    <section id="treatments" className="relative py-24 md:py-32 bg-white overflow-hidden">
+    <section id="treatments" className="relative py-24 md:py-32 bg-background overflow-hidden">
       <div className="container mx-auto px-5">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-14">
           <div>
@@ -37,15 +37,16 @@ export function Treatments() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: (i % 4) * 0.08 }}
-              className="group relative rounded-3xl border border-border bg-background p-7 shadow-soft hover:bg-primary transition-colors duration-300 overflow-hidden"
+              whileHover={{ y: -6 }}
+              className="group relative rounded-3xl p-7 glass-card glass-hover overflow-hidden"
             >
-              <div className="w-14 h-14 rounded-2xl bg-primary/10 group-hover:bg-white/20 flex items-center justify-center mb-5 transition-colors">
-                <t.icon className="text-primary group-hover:text-white transition-colors" size={26} />
+              <div className="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center mb-5">
+                <t.icon className="text-primary" size={26} />
               </div>
-              <h3 className="text-lg font-extrabold text-foreground group-hover:text-white transition-colors">
+              <h3 className="text-lg font-extrabold text-foreground">
                 {t.title}
               </h3>
-              <p className="mt-2 text-sm text-muted-foreground group-hover:text-white/85 leading-relaxed transition-colors">
+              <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
                 {t.text}
               </p>
             </motion.div>
