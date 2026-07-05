@@ -1,0 +1,63 @@
+The current website still feels very basic and doesn't match the premium, high-end experience I'm looking for. Please redesign it with a strong focus on modern UI/UX, smooth storytelling, and advanced GSAP animations.
+
+### Hero Section
+
+* The white shape/background appearing behind the tooth looks unattractive. Remove it completely.
+* The hero section should have a much more premium and visually striking design.
+* Use bold typography, better spacing, and stronger visual hierarchy.
+* Make the entrance animation cinematic. The tooth should animate from the top while the text fades/slides in with smooth GSAP animations.
+* Add depth with lighting, floating effects, and subtle parallax instead of basic animations.
+
+### Overall Website Structure
+
+* I do **not** want the website to feel like separate stacked sections.
+* The entire site should behave as **one continuous landing page** with seamless transitions.
+* Every section should naturally flow into the next without obvious breaks.
+* Create a storytelling experience from top to bottom.
+
+### Tooth Scroll Animation (Very Important)
+
+* A single 3D tooth should remain the main visual element throughout the website.
+* As the user scrolls, the tooth should continuously travel down the page.
+* It should smoothly rotate, scale, tilt, and change its position based on scroll.
+* At certain points, it can transition into another tooth model or another angle with smooth morph-like animations.
+* The transitions should feel premium and cinematic, never abrupt.
+* The tooth should guide the user's attention through the entire landing page until the footer.
+
+### Services Section
+
+* The Services section currently has noticeable animation glitches.
+* Fix all animation issues.
+* Replace the basic animations with high-quality GSAP animations.
+* Cards should animate smoothly with stagger effects, depth, hover interactions, and premium transitions.
+
+### Tooth Section
+
+* The tooth section itself looks good, but currently the tooth rotates left/right and then the animation simply ends.
+* Instead, keep the animation alive throughout scrolling.
+* Add continuous motion, floating, subtle rotations, scaling, lighting changes, and scroll-based transformations so the experience never feels static.
+
+### Testimonials Section
+
+* The Testimonials section looks far too basic.
+* Completely redesign it with a premium layout.
+* Use more images and visual elements.
+* Add animated testimonial cards, profile photos, ratings, floating elements, and smooth GSAP transitions.
+* The section should feel modern, engaging, and interactive.
+
+### Images & Visual Design
+
+* Use significantly more high-quality visuals across the website.
+* Add premium graphics, subtle background effects, gradients, lighting, and decorative elements.
+* The website should never feel empty.
+
+### Animations
+
+* Use advanced GSAP animations throughout the website.
+* Include ScrollTrigger, parallax effects, pinning, smooth reveals, stagger animations, scale effects, rotations, depth, and cinematic transitions.
+* Avoid basic fade-ins or simple slide animations.
+* Every interaction should feel smooth, premium, and polished.
+
+### Final Goal
+
+I want this website to feel like an award-winning interactive experience similar to premium Awwwards websites. It should be visually stunning, animation-heavy, highly engaging, and feel like one continuous storytelling landing page rather than a collection of separate sections.

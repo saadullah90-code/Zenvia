@@ -44,7 +44,7 @@ export function Team() {
   }, []);
 
   return (
-    <section id="team" className="py-40 bg-[#0A0E1A] relative border-t border-white/5 border-b border-white/5 overflow-hidden">
+    <section id="team" className="py-40 bg-[#0A0E1A] relative overflow-hidden">
       <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
       <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-primary/5 rounded-full blur-[150px] pointer-events-none" />
 

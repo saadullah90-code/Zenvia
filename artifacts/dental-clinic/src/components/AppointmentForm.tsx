@@ -64,7 +64,7 @@ export function AppointmentForm() {
   };
 
   return (
-    <section id="book" className="py-40 bg-[#0A0E1A] relative border-t border-white/5">
+    <section id="book" className="py-40 bg-[#0A0E1A] relative">
       <div className="container mx-auto px-6">
         <div className="max-w-6xl mx-auto glass-dark rounded-[3rem] p-10 md:p-20 relative overflow-hidden shadow-2xl border border-white/10">
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[150px] pointer-events-none" />

@@ -48,3 +48,39 @@ id = "sdB4AL8b9Xg62Oj85uc-x"
 uri = "file://artifacts/dental-clinic/public/tooth-showcase.png"
 type = "image"
 title = "glass tooth showcase"
+
+[[generated]]
+id = "7OU93RnWBNv4jmAA52MWw"
+uri = "file://artifacts/dental-clinic/public/tooth-1.png"
+type = "image"
+title = "Tooth front angle white bg"
+
+[[generated]]
+id = "lMYVYn09bpjnCPDTqH2Ec"
+uri = "file://artifacts/dental-clinic/public/tooth-2.png"
+type = "image"
+title = "Tooth angled white bg"
+
+[[generated]]
+id = "WZtV6UswB0u7-_gT-xp73"
+uri = "file://artifacts/dental-clinic/public/tooth-3.png"
+type = "image"
+title = "Tooth back angle white bg"
+
+[[generated]]
+id = "t5GbbCxDnUisNXkBCqHKM"
+uri = "file://artifacts/dental-clinic/public/testi-1.png"
+type = "image"
+title = "Testimonial profile 1"
+
+[[generated]]
+id = "3mO4HGsZWJyoHSGvM4dxm"
+uri = "file://artifacts/dental-clinic/public/testi-2.png"
+type = "image"
+title = "Testimonial profile 2"
+
+[[generated]]
+id = "FiPMOOlKAAhaZvUQ2eKp0"
+uri = "file://artifacts/dental-clinic/public/testi-3.png"
+type = "image"
+title = "Testimonial profile 3"

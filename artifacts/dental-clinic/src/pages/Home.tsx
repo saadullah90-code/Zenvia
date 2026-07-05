@@ -58,13 +58,18 @@ function MagneticButton({ children, className, ...props }: React.ButtonHTMLAttri
 export default function Home() {
   const [loading, setLoading] = useState(true);
   const containerRef = useRef<HTMLDivElement>(null);
-  const heroToothRef = useRef<HTMLImageElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
+  
+  // Refs for the persistent tooth
+  const toothOuterRef = useRef<HTMLDivElement>(null);
+  const tooth1Ref = useRef<HTMLImageElement>(null);
+  const tooth2Ref = useRef<HTMLImageElement>(null);
+  const tooth3Ref = useRef<HTMLImageElement>(null);
+
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
-  
-  const rotateX = useTransform(mouseY, [-0.5, 0.5], [15, -15]);
-  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-15, 15]);
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [10, -10]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-10, 10]);
 
   useEffect(() => {
     const handleGlobalMouseMove = (e: MouseEvent) => {
@@ -97,7 +102,6 @@ export default function Home() {
       lenis.raf(time * 1000);
     };
     gsap.ticker.add(tick);
-
     gsap.ticker.lagSmoothing(0);
 
     return () => {
@@ -118,43 +122,108 @@ export default function Home() {
     };
     resetScroll();
 
-    // Simple reveal animations
-    gsap.utils.toArray('.reveal-up').forEach((elem: any) => {
-      gsap.fromTo(elem, 
-        { y: 60, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: 'expo.out',
-          scrollTrigger: {
-            trigger: elem,
-            start: 'top 85%',
-          }
-        }
-      );
-    });
-
-    if (heroToothRef.current) {
-      gsap.to(heroToothRef.current, {
-        y: 200,
-        scale: 0.8,
-        opacity: 0.5,
-        scrollTrigger: {
-          trigger: '.hero-section',
-          start: 'top top',
-          end: 'bottom top',
-          scrub: true
-        }
+    const toothImgs = [tooth1Ref.current, tooth2Ref.current, tooth3Ref.current];
+    const crossfade = (idx: number) => {
+      toothImgs.forEach((img, i) => {
+        if (img) gsap.to(img, { opacity: i === idx ? 1 : 0, duration: 0.5, ease: 'power2.out', overwrite: 'auto' });
       });
-    }
+    };
 
-    // Deterministic top-load: reset on every ScrollTrigger refresh until the
-    // user actually scrolls, so the pinned Showcase timeline can't leave the
-    // page parked mid-document after layout/image reflow.
+    let mm: ReturnType<typeof gsap.matchMedia> | undefined;
+
+    const ctx = gsap.context(() => {
+      // Reveal animations for standard text
+      gsap.utils.toArray('.reveal-up').forEach((elem: any) => {
+        gsap.fromTo(elem,
+          { y: 60, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1.2,
+            ease: 'expo.out',
+            scrollTrigger: {
+              trigger: elem,
+              start: 'top 85%',
+            }
+          }
+        );
+      });
+
+      mm = gsap.matchMedia();
+
+      // Desktop: section-anchored waypoints so the traveling tooth stays in
+      // sync with each section regardless of the pinned Showcase scroll length.
+      mm.add('(min-width: 768px)', () => {
+        const outer = toothOuterRef.current;
+        if (!outer) return;
+
+        gsap.set(outer, { x: 0, y: 0, scale: 1, rotate: 0 });
+        // Cinematic entrance: descend from the top on load.
+        gsap.from(outer, { y: '-150vh', scale: 0.8, duration: 2, ease: 'power4.out' });
+
+        // Travel INTO the pinned showcase (center + grow), then keep it alive
+        // (slow rotate + pulse) across the full pinned distance.
+        gsap.to(outer, {
+          x: '0vw', y: '0vh', scale: 1.15, rotate: 0, ease: 'none',
+          scrollTrigger: { trigger: '#showcase-section', start: 'top bottom', end: 'top top', scrub: 1 },
+        });
+        gsap.to(outer, {
+          rotate: 35, scale: 1.25, ease: 'none',
+          scrollTrigger: { trigger: '#showcase-section', start: 'top top', end: '+=150%', scrub: 1 },
+        });
+
+        // Angle morphs anchored to section centers.
+        ScrollTrigger.create({ trigger: '#services', start: 'top center', onEnter: () => crossfade(1), onLeaveBack: () => crossfade(0) });
+        ScrollTrigger.create({ trigger: '#showcase-section', start: 'top center', onEnter: () => crossfade(2), onLeaveBack: () => crossfade(1) });
+
+        // Section waypoints: each tween runs while that section approaches the
+        // top, starting from the tooth's previous state for continuous motion.
+        const waypoints = [
+          { sel: '#about',        x: '28vw',  y: '12vh', scale: 0.62, rotate: 12 },
+          { sel: '#services',     x: '-28vw', y: '8vh',  scale: 0.5,  rotate: -10 },
+          { sel: '#gallery',      x: '24vw',  y: '6vh',  scale: 0.62, rotate: 18 },
+          { sel: '#team',         x: '-24vw', y: '5vh',  scale: 0.55, rotate: -16 },
+          { sel: '#testimonials', x: '0vw',   y: '10vh', scale: 0.46, rotate: 6 },
+          { sel: '#book',         x: '26vw',  y: '4vh',  scale: 0.5,  rotate: -6 },
+        ];
+        waypoints.forEach((w) => {
+          gsap.to(outer, {
+            x: w.x, y: w.y, scale: w.scale, rotate: w.rotate, ease: 'none',
+            scrollTrigger: { trigger: w.sel, start: 'top bottom', end: 'top top', scrub: 1 },
+          });
+        });
+
+        // Settle + fade out near the end.
+        gsap.to(outer, {
+          y: '20vh', scale: 0.4, opacity: 0.4, ease: 'none',
+          scrollTrigger: { trigger: '#faq', start: 'top center', end: 'bottom bottom', scrub: 1 },
+        });
+      });
+
+      // Mobile: no heavy horizontal travel; a simple, cinematic vertical drift.
+      mm.add('(max-width: 767px)', () => {
+        const outer = toothOuterRef.current;
+        if (!outer) return;
+
+        gsap.set(outer, { x: 0, y: 0, scale: 0.8, rotate: 0 });
+        gsap.from(outer, { y: '-60vh', scale: 0.5, duration: 1.6, ease: 'power4.out' });
+
+        gsap.to(outer, {
+          y: '40vh', scale: 0.5, rotate: 120, ease: 'none',
+          scrollTrigger: { trigger: containerRef.current, start: 'top top', end: 'bottom bottom', scrub: 1 },
+        });
+        ScrollTrigger.create({ trigger: '#showcase-section', start: 'top center', onEnter: () => crossfade(2), onLeaveBack: () => crossfade(0) });
+      });
+    }, containerRef);
+
+    // Deterministic top-load: only real user input disables the reset guard,
+    // never our own programmatic scrollTo (which also emits Lenis 'scroll').
     let userScrolled = false;
     const markScrolled = () => { userScrolled = true; };
-    lenisRef.current?.on('scroll', markScrolled);
+    window.addEventListener('wheel', markScrolled, { passive: true });
+    window.addEventListener('touchstart', markScrolled, { passive: true });
+    window.addEventListener('keydown', markScrolled);
+    window.addEventListener('pointerdown', markScrolled);
 
     const onRefresh = () => {
       if (!userScrolled) resetScroll();
@@ -170,15 +239,20 @@ export default function Home() {
     }, 400);
 
     return () => {
+      mm?.revert();
+      ctx.revert();
       cancelAnimationFrame(raf);
       clearTimeout(t);
       ScrollTrigger.removeEventListener('refresh', onRefresh);
-      lenisRef.current?.off('scroll', markScrolled);
+      window.removeEventListener('wheel', markScrolled);
+      window.removeEventListener('touchstart', markScrolled);
+      window.removeEventListener('keydown', markScrolled);
+      window.removeEventListener('pointerdown', markScrolled);
     };
   }, [loading]);
 
   return (
-    <div className="bg-[#0A0E1A] text-white min-h-screen" ref={containerRef}>
+    <div className="bg-[#0A0E1A] text-white min-h-[100dvh]" ref={containerRef} id="main-container">
       <CustomCursor />
       
       {loading && <Preloader onComplete={() => setLoading(false)} />}
@@ -187,30 +261,58 @@ export default function Home() {
         <>
           <Navbar />
 
+          {/* PERSISTENT TOOTH CONTAINER */}
+          <div className="fixed top-0 left-0 w-full h-screen pointer-events-none z-30 flex items-center justify-center overflow-hidden">
+            {/* Outer node: GSAP-only scroll transforms (x/y/scale/rotate) */}
+            <div
+              ref={toothOuterRef}
+              className="relative w-[80vw] md:w-[60vw] max-w-[800px] flex items-center justify-center will-change-transform"
+            >
+              {/* Inner node: Framer mouse-tilt (kept off the GSAP-controlled node) */}
+              <motion.div
+                className="relative w-full h-full flex items-center justify-center will-change-transform"
+                style={{ rotateX, rotateY }}
+              >
+              {/* Floating animation layered on top of scroll animation */}
+              <motion.div
+                animate={{ y: [0, -20, 0] }}
+                transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                className="relative w-full h-full flex items-center justify-center"
+              >
+                <img 
+                  ref={tooth1Ref}
+                  src="/tooth-1.png" 
+                  alt="Dental Implant Front" 
+                  className="absolute inset-0 w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(11,99,246,0.5)] will-change-transform"
+                  style={{ opacity: 1 }}
+                />
+                <img 
+                  ref={tooth2Ref}
+                  src="/tooth-2.png" 
+                  alt="Dental Implant Angle" 
+                  className="absolute inset-0 w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(11,99,246,0.5)] will-change-transform"
+                  style={{ opacity: 0 }}
+                />
+                <img 
+                  ref={tooth3Ref}
+                  src="/tooth-3.png" 
+                  alt="Dental Implant Back" 
+                  className="absolute inset-0 w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(11,99,246,0.5)] will-change-transform"
+                  style={{ opacity: 0 }}
+                />
+              </motion.div>
+              </motion.div>
+            </div>
+          </div>
+
           {/* Hero */}
-          <section className="hero-section relative h-screen flex items-center justify-center overflow-hidden pt-20 bg-[#0A0E1A] border-b border-white/5">
+          <section className="hero-section relative h-screen flex items-center justify-center overflow-hidden pt-20 bg-[#0A0E1A]">
             <div className="absolute inset-0 z-0 bg-noise opacity-[0.05]" />
             <div className="absolute inset-0 z-0">
                <div className="absolute top-0 inset-x-0 h-[50vh] bg-gradient-to-b from-primary/10 to-transparent mix-blend-screen" />
             </div>
             
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-[800px] bg-primary/20 rounded-full blur-[150px] pointer-events-none" />
-
-            <div className="absolute inset-0 z-10 pointer-events-none flex items-center justify-center overflow-hidden perspective-[1000px]">
-              <motion.div 
-                className="relative w-[80vw] md:w-[60vw] max-w-[800px]"
-                animate={{ y: [0, -30, 0] }}
-                transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }}
-                style={{ rotateX, rotateY }}
-              >
-                <img 
-                  ref={heroToothRef}
-                  src="/tooth-hero.png" 
-                  alt="Futuristic Dental Implant" 
-                  className="w-full h-auto object-contain drop-shadow-[0_0_60px_rgba(11,99,246,0.4)]"
-                />
-              </motion.div>
-            </div>
 
             <div className="container mx-auto px-6 relative z-20 pointer-events-none">
               <div className="max-w-3xl">
@@ -256,7 +358,7 @@ export default function Home() {
           </section>
 
           {/* About / Stats */}
-          <section id="about" className="py-40 bg-[#05070D] relative border-b border-white/5 overflow-hidden">
+          <section id="about" className="py-40 bg-[#0A0E1A] relative overflow-hidden">
             <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[150px] pointer-events-none" />
             <div className="absolute inset-0 bg-noise opacity-[0.03] pointer-events-none" />
 
