@@ -42,8 +42,8 @@ layer, the fixed tooth layer, and the giant backdrop heading are all
 `hidden md:flex`, and the GSAP travel is gated via
 `gsap.matchMedia('(min-width:768px)')`. On MOBILE the hero is a clean vertical
 stack: an `md:hidden` in-flow block at the top holds the giant "SMILE MATTERS"
-heading + splash + tooth centered as one group, then the appointment card, then
-stats — nothing overlaps. See `persistent-scroll-tooth.md`.
+heading FIRST (visible, fade-in), then the splash + tooth below it, then the
+appointment card, then stats — nothing overlaps. See `persistent-scroll-tooth.md`.
 **Why:** the fixed traveling tooth covered the mobile appointment card. An interim
 "same animation on all devices" attempt (nudging the group up + shrinking the
 heading) STILL overlapped the card, so the user reverted to desktop-only fixed /

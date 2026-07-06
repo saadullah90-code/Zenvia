@@ -33,8 +33,8 @@ Gate the fixed/traveling tooth + splash-fade to desktop with
 `gsap.matchMedia('(min-width:768px)')`, and make the fixed splash layer, fixed
 tooth layer, and giant backdrop heading `hidden md:flex`. On MOBILE render an
 `md:hidden` IN-FLOW block at the TOP of the hero holding the giant "SMILE MATTERS"
-heading + splash + tooth centered as ONE group, then (in normal document flow) the
-appointment card, then the stats. The in-flow tooth still gets the intro
+heading FIRST (visible fade-in), then the splash + tooth below it, then (in normal
+document flow) the appointment card, then the stats. The in-flow tooth still gets the intro
 (splash-pop + tooth-drop + idle-tilt, gated on `!loading`) but has NO scroll
 travel — so the mobile hero is a clean vertical stack with nothing overlapping.
 **Why:** a `position:fixed` tooth that travels over every section floats ON TOP of

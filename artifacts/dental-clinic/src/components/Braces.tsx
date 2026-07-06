@@ -15,17 +15,23 @@ export function Braces() {
         <div className="grid lg:grid-cols-2 gap-14 items-center">
           {/* Visual */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.92 }}
+            initial={{ opacity: 0, scale: 0.9 }}
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.7 }}
+            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="relative"
           >
-            <div className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-full bg-primary/20 blur-3xl" />
-            <div className="relative rounded-[2.5rem] p-8 glass-card">
-              <img src="/braces.png" alt="Clear dental aligners and braces" className="w-full drop-shadow-2xl" />
-            </div>
-            <div className="absolute -bottom-5 -left-5 rounded-2xl px-5 py-4 glass-card">
+            <div className="absolute inset-0 m-auto w-3/4 h-3/4 rounded-full bg-primary/25 blur-3xl" />
+            {/* Braces shown as a raw transparent PNG (no card frame) that floats
+                gently and rotates, matching the hero's animated feel. */}
+            <motion.img
+              src="/braces.png"
+              alt="Clear dental aligners and braces"
+              animate={{ y: [-12, 12, -12], rotate: [-2.5, 2.5, -2.5] }}
+              transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+              className="relative w-full drop-shadow-[0_30px_50px_rgba(20,120,200,0.4)]"
+            />
+            <div className="absolute -bottom-2 -left-2 rounded-2xl px-5 py-4 glass-card">
               <p className="text-3xl font-extrabold text-primary leading-none">98%</p>
               <p className="text-xs font-semibold text-muted-foreground mt-1">patient satisfaction</p>
             </div>

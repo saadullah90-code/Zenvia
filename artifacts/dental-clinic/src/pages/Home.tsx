@@ -241,26 +241,29 @@ export default function Home() {
         style={{ zIndex: 20 }}
       >
         <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-start md:justify-end gap-8 sm:gap-10">
-          {/* MOBILE-only hero composition: giant "SMILE MATTERS" heading + splash +
-              tooth centered as one group; the card + stats stack BELOW it so nothing
-              overlaps. Desktop hides this and uses the fixed traveling tooth. */}
-          <div className="md:hidden relative flex items-center justify-center pt-2 pb-1">
-            <div
-              aria-hidden
-              className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[0.76] select-none pointer-events-none"
+          {/* MOBILE-only hero composition (md:hidden): the giant "SMILE MATTERS"
+              heading comes FIRST (fully visible), then the splash + tooth sit BELOW
+              it, then the card + stats — a clean vertical stack, nothing overlaps.
+              Desktop hides this and uses the fixed traveling tooth. */}
+          <div className="md:hidden flex flex-col items-center pt-2">
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              animate={loading ? {} : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.15 }}
+              className="flex flex-col items-center text-center leading-[0.78] select-none"
             >
-              <span className="font-serif-display uppercase text-[16vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/40 via-primary/20 to-primary/[0.06]">
+              <span className="font-serif-display uppercase text-[17vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary via-primary/80 to-primary/45">
                 Smile
               </span>
-              <span className="font-serif-display uppercase text-[16vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/30 via-primary/15 to-primary/[0.04] -mt-[0.14em]">
+              <span className="font-serif-display uppercase text-[17vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/90 via-primary/70 to-primary/40 -mt-[0.14em]">
                 Matters
               </span>
-            </div>
-            <div className="relative w-[78vw] max-w-[330px] aspect-square flex items-center justify-center">
+            </motion.div>
+            <div className="relative w-[82vw] max-w-[340px] aspect-square flex items-center justify-center -mt-3">
               <motion.img
                 initial={{ scale: 0.2, opacity: 0 }}
                 animate={loading ? {} : { scale: 1, opacity: 1 }}
-                transition={{ type: 'spring', stiffness: 130, damping: 12, delay: 0.25 }}
+                transition={{ type: 'spring', stiffness: 130, damping: 12, delay: 0.3 }}
                 src="/splash-blue.png"
                 alt=""
                 aria-hidden
@@ -269,8 +272,8 @@ export default function Home() {
               <motion.div
                 initial={{ y: -300, opacity: 0, rotate: -16 }}
                 animate={loading ? {} : { y: 0, opacity: 1, rotate: 0 }}
-                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
-                className="relative w-[60%]"
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
+                className="relative w-[58%]"
               >
                 <motion.div
                   animate={{ rotate: [-4, 4, -4] }}
