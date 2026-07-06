@@ -31,6 +31,7 @@ export default function Home() {
   const mainRef = useRef<HTMLDivElement>(null);
   const toothOuter = useRef<HTMLDivElement>(null);
   const splashRef = useRef<HTMLImageElement>(null);
+  const mobileTooth = useRef<HTMLDivElement>(null);
 
   // Framer mouse tilt for the floating tooth (kept on a separate node from GSAP)
   const tiltX = useMotionValue(0);
@@ -130,6 +131,29 @@ export default function Home() {
         .to(outer, { x: () => -vw() * (kx * 0.85), y: () => vh() * 0.3, rotate: 210, scale: s0 * 0.64, opacity: op, ease: 'none' })
         .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 300, scale: s0 * 0.62, opacity: op, ease: 'none' })
         .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
+    });
+
+    // MOBILE (<768px): the tooth stays IN-FLOW in the hero (no travel, no x/y — so
+    // the clean stacked layout never shifts) but spins a full turn as the hero
+    // scrolls away, giving it the desktop-style scroll reaction without glitches.
+    mm.add('(max-width: 767px)', () => {
+      const el = mobileTooth.current;
+      if (!el) return;
+      gsap.fromTo(
+        el,
+        { rotate: 0 },
+        {
+          rotate: 360,
+          ease: 'none',
+          scrollTrigger: {
+            trigger: '#home',
+            start: 'top top',
+            end: 'bottom top',
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        },
+      );
     });
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -275,17 +299,21 @@ export default function Home() {
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
                 className="relative w-[58%]"
               >
-                <motion.div
-                  animate={{ rotate: [-4, 4, -4] }}
-                  transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-                >
-                  <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/25 blur-3xl" />
-                  <img
-                    src="/tooth-hero.png"
-                    alt="3D dental tooth"
-                    className="relative w-full drop-shadow-[0_28px_42px_rgba(20,120,200,0.35)]"
-                  />
-                </motion.div>
+                {/* GSAP scroll-rotation node (mobile) — kept separate from Framer's
+                    intro drop + idle wobble so no single node has two transform authors. */}
+                <div ref={mobileTooth}>
+                  <motion.div
+                    animate={{ rotate: [-4, 4, -4] }}
+                    transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                  >
+                    <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/25 blur-3xl" />
+                    <img
+                      src="/tooth-hero.png"
+                      alt="3D dental tooth"
+                      className="relative w-full drop-shadow-[0_28px_42px_rgba(20,120,200,0.35)]"
+                    />
+                  </motion.div>
+                </div>
               </motion.div>
             </div>
           </div>
