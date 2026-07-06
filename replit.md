@@ -8,7 +8,7 @@ A premium, fully-animated single-page marketing website for the "Zenvia" dental 
 - `pnpm --filter @workspace/dental-clinic run typecheck` — typecheck the site (use this, NOT `build`)
 - `pnpm run typecheck` — full typecheck across all packages
 - `pnpm run build` — typecheck + build all packages (needs workflow-provided PORT/BASE_PATH)
-- Vercel deploy: root `vercel.json` builds the site (`pnpm --filter @workspace/dental-clinic run build`, output `artifacts/dental-clinic/dist/public`, SPA rewrite). `vite.config.ts` is env-tolerant (port defaults 5173, `BASE_PATH` defaults `/`) so `vite build` works without the workflow env. Keep `BASE_PATH=/` for Vercel (root hosting).
+- Vercel deploy: root `vercel.json` builds the site (`pnpm --filter @workspace/dental-clinic run build`, output `artifacts/dental-clinic/dist/public`, SPA rewrite). `vite.config.ts` is env-tolerant (port defaults 5173, `BASE_PATH` defaults `/`) so `vite build` works without the workflow env. Keep `BASE_PATH=/` for Vercel (root hosting). The Replit dev plugins (cartographer, dev-banner, runtime-error-modal) were intentionally removed from `vite.config.ts` AND the artifact `package.json` so the served/shared site carries NO "built on Replit" branding — do NOT re-add them (user requirement: nothing should reveal the project was made on Replit).
 
 ## Stack
 
@@ -23,7 +23,7 @@ A premium, fully-animated single-page marketing website for the "Zenvia" dental 
   - `src/pages/Home.tsx` — page shell: hero, the persistent traveling+rotating-tooth scroll system (DESKTOP only — the GSAP travel is gated via `gsap.matchMedia('(min-width:768px)')`; splash and tooth are two separate fixed layers so the splash sits BEHIND the cards at z-10 and the tooth stays on top at z-30; both fixed layers + the giant backdrop heading are `hidden md:flex`), plus an `md:hidden` in-flow MOBILE hero block (giant heading FIRST, then splash + tooth below it, then card + stats), Lenis + GSAP ticker, deterministic load-at-top, and section ordering.
   - `src/components/` — one file per section: Navbar, Preloader, Marquee, About, Problems, Braces, Treatments, Testimonials, FAQ, Contact, Footer, plus `SparkleButton.tsx` (reusable blue sparkle CTA).
   - `src/index.css` — light theme HSL tokens (light-blue background, `primary` blue ~#14a0e6, `accent` also blue `221 83% 53%` — NO orange), Manrope, `--font-serif`/`.font-serif-display`, premium `.glass-card` (multi-layer bg with folded-in sheen, blur+saturate) + `.glass-hover` (glow only — lift is Framer's), `.hero-info-card` mobile-opaque override, marquee/shadow utilities, and `.sparkle-btn` (+ `--sm`/`--lg`) blue-gradient button styles.
-  - `public/` — `tooth-hero.png` (glossy white molar, transparent), `splash-blue.png` (royal-blue liquid splash, transparent), `braces.png`, plus stock JPGs (clinic-interior, patient-smiling, dentist-portrait, healthy-smile, teeth-cleaning).
+  - `public/` — `tooth-hero.png` (glossy white molar, transparent), `splash-blue.png` (royal-blue liquid splash, transparent), `braces.png`, plus stock JPGs (clinic-interior, patient-smiling, dentist-portrait, healthy-smile, teeth-cleaning). `favicon.svg` is the brand logo mark: a rounded blue-gradient tile with a white "Z" monogram (matches the two-tone Zenvia wordmark — NO orange).
 
 ## Architecture decisions
 
