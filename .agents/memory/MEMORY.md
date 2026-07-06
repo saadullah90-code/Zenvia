@@ -1,1 +1,1 @@
-- [Zenvia glass & hero serif](glass-and-hero-typography.md) — glass sheen folded into `background` (no `::before`), glass needs a tinted bg not white, one transform-author per node (Framer lift vs CSS glow).
+- [Zenvia hero stacking + mobile overlap](hero-stacking-and-mobile.md) — hero = 3 sibling z-layers (backdrop<tooth<section); nesting the card in the section traps it under the fixed tooth. Also: restart workflow after structural JSX edits (HMR won't apply them).

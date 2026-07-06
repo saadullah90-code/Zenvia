@@ -160,8 +160,8 @@ export default function Home() {
 
       {/* Fixed tooth + splash unit (all devices) — splash pops up, tooth drops from top, travels + rotates */}
       <div
-        className="fixed inset-0 z-30 pointer-events-none flex justify-center items-start pt-[11vh] md:items-center md:pt-0"
-        style={{ perspective: 1000 }}
+        className="fixed inset-0 pointer-events-none flex justify-center items-start pt-[9vh] md:items-center md:pt-0"
+        style={{ perspective: 1000, zIndex: 10 }}
       >
         <div className="relative w-[74vw] max-w-[330px] sm:max-w-[400px] md:max-w-[460px] lg:max-w-[520px] aspect-square">
           {/* Splash — Framer pops it up from behind on load; GSAP fades it on scroll (separate nodes, no transform conflict) */}
@@ -209,18 +209,22 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ===== HERO ===== */}
-      <section id="home" className="relative min-h-screen flex flex-col overflow-hidden pt-28 pb-14">
-        {/* Background */}
+      {/* Hero backdrop (BELOW the tooth): gradient, glow blob, and giant serif typography.
+          This is a sibling layer UNDER the fixed tooth so the tooth renders in front of the
+          serif/background but still behind the hero card (which lives in the section above).
+          The card cannot beat the tooth via z-index alone because the section forms its own
+          stacking context, so we split the hero across three sibling layers instead. */}
+      <div
+        className="absolute top-0 inset-x-0 h-screen overflow-hidden pointer-events-none"
+        style={{ zIndex: 1 }}
+      >
         <div className="absolute inset-0 bg-gradient-to-b from-[#d7ecfb] via-[#eaf5fd] to-background" />
         <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[85vw] h-[55vh] bg-[#bfe3fb] rounded-full blur-[130px] opacity-70" />
-
-        {/* Giant serif background typography behind the tooth (reference-style) */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={loading ? {} : { opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-          className="pointer-events-none absolute inset-x-0 top-[10vh] md:top-1/2 md:-translate-y-1/2 z-0 flex flex-col items-center text-center leading-[0.76] select-none"
+          className="absolute inset-x-0 top-[10vh] md:top-1/2 md:-translate-y-1/2 flex flex-col items-center text-center leading-[0.76] select-none"
         >
           <span className="font-serif-display uppercase text-[27vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/40 via-primary/20 to-primary/[0.06]">
             Smile
@@ -229,10 +233,17 @@ export default function Home() {
             Matters
           </span>
         </motion.h1>
+      </div>
 
-        <div className="container mx-auto px-5 relative z-10 flex-1 flex flex-col justify-end">
+      {/* ===== HERO ===== (transparent, ABOVE the tooth so card/stats stay readable over it) */}
+      <section
+        id="home"
+        className="relative min-h-screen flex flex-col overflow-hidden pt-28 pb-14"
+        style={{ zIndex: 20 }}
+      >
+        <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-end">
           {/* Info card + stats (above the tooth) */}
-          <div className="grid lg:grid-cols-2 gap-8 items-end mt-auto relative z-40">
+          <div className="grid lg:grid-cols-2 gap-8 items-end mt-auto relative">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={loading ? {} : { opacity: 1, y: 0 }}
@@ -257,12 +268,12 @@ export default function Home() {
               initial={{ opacity: 0, y: 40 }}
               animate={loading ? {} : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.55 }}
-              className="flex flex-wrap gap-8 lg:justify-end"
+              className="flex flex-wrap gap-3 sm:gap-4 lg:justify-end"
             >
               {stats.map((s) => (
-                <div key={s.label} className="min-w-[110px]">
-                  <p className="text-4xl lg:text-5xl font-extrabold text-primary leading-none">{s.value}</p>
-                  <p className="mt-2 text-sm font-bold text-muted-foreground max-w-[130px]">{s.label}</p>
+                <div key={s.label} className="glass-card rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 min-w-[104px] flex-1 sm:flex-none">
+                  <p className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary leading-none">{s.value}</p>
+                  <p className="mt-2 text-xs sm:text-sm font-bold text-muted-foreground max-w-[130px]">{s.label}</p>
                 </div>
               ))}
             </motion.div>

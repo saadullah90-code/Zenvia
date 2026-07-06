@@ -32,9 +32,7 @@ export function Navbar() {
         <div className="container mx-auto px-5">
           <div
             className={`flex items-center justify-between rounded-full transition-all duration-500 ${
-              scrolled
-                ? 'bg-white/85 backdrop-blur-xl px-6 py-2.5 shadow-soft border border-white'
-                : 'px-2 py-1'
+              scrolled ? 'glass-card px-4 sm:px-6 py-2.5' : 'px-2 py-1'
             }`}
           >
             <a href="#home" className="flex items-center text-2xl tracking-tight">
@@ -55,12 +53,14 @@ export function Navbar() {
               ))}
             </nav>
 
-            <SparkleButton href="#contact" size="sm" className="hidden lg:inline-flex">
-              Book Appointment
-            </SparkleButton>
+            <div className="hidden lg:block">
+              <SparkleButton href="#contact" size="sm">
+                Book Appointment
+              </SparkleButton>
+            </div>
 
             <button
-              className="lg:hidden text-foreground bg-white/80 p-2.5 rounded-full border border-white shadow-soft"
+              className="lg:hidden text-foreground glass-card p-2.5 rounded-full"
               onClick={() => setOpen(true)}
               aria-label="Open menu"
             >
