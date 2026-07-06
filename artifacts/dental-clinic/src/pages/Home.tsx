@@ -79,19 +79,17 @@ export default function Home() {
         });
       });
 
-      // Traveling + rotating tooth — DESKTOP ONLY. On mobile the tooth is an in-flow
-      // element inside the hero (see the md:hidden block below) so it never floats over
-      // and covers the appointment card / contact form, and never causes a horizontal shift.
-      const mm = gsap.matchMedia();
-      mm.add('(min-width: 768px)', () => {
-        const outer = toothOuter.current;
-        if (!outer) return;
-
+      // Traveling + rotating tooth — runs on ALL devices (desktop + mobile).
+      // Horizontal sway is bounded and both fixed layers are overflow-hidden, plus a
+      // global html/body/#root overflow-x:hidden guard, so mobile never gets a
+      // horizontal shift even though the tooth travels over the page.
+      const outer = toothOuter.current;
+      if (outer) {
         const vw = () => window.innerWidth;
         const vh = () => window.innerHeight;
-        const kx = 0.22; // horizontal sway (bounded so the tooth never leaves the viewport)
+        const kx = 0.2; // horizontal sway (bounded so the tooth stays in view)
         const s0 = 1; // base scale
-        const op = 0.95; // travel opacity — kept high so the tooth stays crisp/visible the whole way down
+        const op = 0.95; // travel opacity — kept high so the tooth stays crisp the whole way down
 
         gsap.set(outer, { x: 0, y: 0, rotate: 0, scale: s0, opacity: 1 });
 
@@ -129,14 +127,7 @@ export default function Home() {
           .to(outer, { x: () => -vw() * (kx * 0.85), y: () => vh() * 0.3, rotate: 210, scale: s0 * 0.64, opacity: op, ease: 'none' })
           .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 300, scale: s0 * 0.62, opacity: op, ease: 'none' })
           .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
-
-        return () => {
-          gsap.set(outer, { clearProps: 'all' });
-          if (splashRef.current) gsap.set(splashRef.current, { clearProps: 'all' });
-        };
-      });
-
-      return () => mm.revert();
+      }
     }, mainRef);
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -155,14 +146,11 @@ export default function Home() {
 
       <Navbar />
 
-      {/* Fixed traveling tooth + splash unit — DESKTOP ONLY (mobile uses the in-flow tooth
-          inside the hero). Splash pops up, tooth drops from the top, then travels + rotates on scroll. */}
-      <div
-        className="fixed inset-0 z-30 pointer-events-none hidden md:flex justify-center items-start overflow-hidden md:pt-[10vh]"
-        style={{ perspective: 1000 }}
-      >
+      {/* Fixed SPLASH layer — sits BEHIND the hero cards (z-10, above the z-1 backdrop,
+          below the z-20 content). Framer pops it up on load; GSAP fades it on scroll
+          (separate nodes, no transform conflict). Same centered box as the tooth so they align. */}
+      <div className="fixed inset-0 z-10 pointer-events-none flex justify-center items-center overflow-hidden -translate-y-[9vh] md:translate-y-0">
         <div className="relative w-[72vw] max-w-[300px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] aspect-square">
-          {/* Splash — Framer pops it up from behind on load; GSAP fades it on scroll (separate nodes, no transform conflict) */}
           <motion.div
             initial={{ scale: 0.2, opacity: 0 }}
             animate={loading ? {} : { scale: 1, opacity: 1 }}
@@ -177,7 +165,40 @@ export default function Home() {
               className="w-full h-full object-contain"
             />
           </motion.div>
+        </div>
+      </div>
 
+      {/* Hero backdrop (lowest layer, z-1): gradient, glow blob, and giant serif
+          "SMILE MATTERS" typography — centered behind the tooth on ALL devices. */}
+      <div
+        className="absolute top-0 inset-x-0 h-screen overflow-hidden pointer-events-none"
+        style={{ zIndex: 1 }}
+      >
+        <div className="absolute inset-0 bg-gradient-to-b from-[#d7ecfb] via-[#eaf5fd] to-background" />
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[85vw] h-[55vh] bg-[#bfe3fb] rounded-full blur-[130px] opacity-70" />
+        <motion.h1
+          initial={{ opacity: 0, y: 30 }}
+          animate={loading ? {} : { opacity: 1, y: 0 }}
+          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
+          className="absolute inset-x-0 top-[40%] md:top-1/2 -translate-y-1/2 flex flex-col items-center text-center leading-[0.76] select-none px-3"
+        >
+          <span className="font-serif-display uppercase text-[17vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/40 via-primary/20 to-primary/[0.06]">
+            Smile
+          </span>
+          <span className="font-serif-display uppercase text-[17vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/30 via-primary/15 to-primary/[0.04] -mt-[0.14em]">
+            Matters
+          </span>
+        </motion.h1>
+      </div>
+
+      {/* Fixed TOOTH layer — the TOP visual layer (z-30, below only the z-50 navbar).
+          Drops in from the top on load, then travels + rotates on scroll (ALL devices).
+          pointer-events-none so it never blocks clicks on the content underneath. */}
+      <div
+        className="fixed inset-0 z-30 pointer-events-none flex justify-center items-center overflow-hidden -translate-y-[9vh] md:translate-y-0"
+        style={{ perspective: 1000 }}
+      >
+        <div className="relative w-[72vw] max-w-[300px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] aspect-square">
           {/* GSAP-controlled travel/rotate node */}
           <div ref={toothOuter} className="absolute inset-0 flex items-center justify-center">
             {/* Framer intro: tooth drops in from the top after the preloader */}
@@ -207,70 +228,16 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hero backdrop (lowest layer, z-1): gradient, glow blob, and giant serif typography.
-          Sibling layer below both the hero content (z-20) and the desktop fixed tooth (z-30). */}
-      <div
-        className="absolute top-0 inset-x-0 h-screen overflow-hidden pointer-events-none"
-        style={{ zIndex: 1 }}
-      >
-        <div className="absolute inset-0 bg-gradient-to-b from-[#d7ecfb] via-[#eaf5fd] to-background" />
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[85vw] h-[55vh] bg-[#bfe3fb] rounded-full blur-[130px] opacity-70" />
-        <motion.h1
-          initial={{ opacity: 0, y: 30 }}
-          animate={loading ? {} : { opacity: 1, y: 0 }}
-          transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-          className="absolute inset-x-0 top-[10vh] md:top-1/2 md:-translate-y-1/2 flex flex-col items-center text-center leading-[0.76] select-none"
-        >
-          <span className="font-serif-display uppercase text-[27vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/40 via-primary/20 to-primary/[0.06]">
-            Smile
-          </span>
-          <span className="font-serif-display uppercase text-[27vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/30 via-primary/15 to-primary/[0.04] -mt-[0.14em]">
-            Matters
-          </span>
-        </motion.h1>
-      </div>
-
-      {/* ===== HERO ===== content layer (z-20). On mobile it also holds the in-flow tooth
-          (stacked: tooth → appointment card → stats) so nothing overlaps or shifts. */}
+      {/* ===== HERO ===== content layer (z-20): appointment card + stats sit at the
+          BOTTOM (all devices) so the centered tooth+splash+heading read above them. */}
       <section
         id="home"
         className="relative min-h-screen flex flex-col overflow-hidden pt-24 md:pt-28 pb-14"
         style={{ zIndex: 20 }}
       >
-        <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-start md:justify-end gap-8 sm:gap-10">
-          {/* MOBILE-only in-flow tooth + splash (desktop uses the fixed traveling tooth above) */}
-          <div className="md:hidden relative mx-auto w-[72vw] max-w-[300px] aspect-square shrink-0 mt-2">
-            <motion.div
-              initial={{ scale: 0.3, opacity: 0 }}
-              animate={loading ? {} : { scale: 1, opacity: 1 }}
-              transition={{ type: 'spring', stiffness: 130, damping: 13, delay: 0.2 }}
-              className="absolute inset-0"
-            >
-              <img src="/splash-blue.png" alt="" aria-hidden className="w-full h-full object-contain" />
-            </motion.div>
-            <motion.div
-              initial={{ y: -180, opacity: 0, rotate: -14 }}
-              animate={loading ? {} : { y: 0, opacity: 1, rotate: 0 }}
-              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
-              className="absolute inset-0 flex items-center justify-center"
-            >
-              <motion.div
-                animate={{ rotate: [-4, 4, -4] }}
-                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-                className="relative w-[60%]"
-              >
-                <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/25 blur-3xl" />
-                <img
-                  src="/tooth-hero.png"
-                  alt="3D dental tooth"
-                  className="relative w-full drop-shadow-[0_20px_34px_rgba(20,120,200,0.35)]"
-                />
-              </motion.div>
-            </motion.div>
-          </div>
-
+        <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-end gap-8 sm:gap-10">
           {/* Info card + stats */}
-          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-end md:mt-auto relative">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-end mt-auto relative">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={loading ? {} : { opacity: 1, y: 0 }}

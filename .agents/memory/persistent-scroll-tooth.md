@@ -28,20 +28,24 @@ A fixed, viewport-centered object with only tiny ±y offsets reads as side-to-si
 ## Compositing a hero object inside a backdrop (tooth-in-splash)
 To align a foreground PNG perfectly inside a backdrop PNG (tooth inside a liquid splash), put BOTH in the same fixed viewport-centered box (`fixed inset-0 flex items-center justify-center` → sized relative box). The backdrop is `absolute inset-0`; the moving object sits in an inner absolutely-centered node that GSAP transforms. On scroll, fade the backdrop out (it belongs to the hero) via its own scrub trigger while the object travels. This guarantees pixel-alignment without guesswork.
 
-## The fixed traveling tooth is DESKTOP-ONLY; mobile uses an in-flow tooth
-Do NOT run the fixed/traveling tooth on mobile. A `position:fixed` tooth that
-travels over every section floats ON TOP of the appointment card and contact
-form on small screens (covering copy and inputs) and its x-transform pushes the
-page right. Gate the whole fixed unit to desktop: `hidden md:flex` on the
-container AND `gsap.matchMedia().add('(min-width:768px)', ...)` so the scroll
-travel/splash-fade only ever runs ≥768px. On MOBILE render a separate `md:hidden`
-IN-FLOW tooth+splash at the top of the hero — it still gets the intro
-(splash-pop + tooth-drop + idle-tilt, gated on `!loading`) but has NO scroll
-travel, so the hero is a clean vertical stack (tooth+splash → appointment card →
-stats) with nothing overlapping and no horizontal shift.
-**Why:** an earlier attempt ran the SAME fixed traveling animation on mobile
-(tuning `kx`/scale/opacity per breakpoint); that was the exact cause of the
-over-content overlap and right-shift the user complained about. The intro
-animations on mobile are fine — only the fixed scroll-travel must stay
-desktop-only. This supersedes any older "run the same animation on all devices"
-note.
+## The fixed traveling tooth runs on ALL devices (desktop + mobile)
+The fixed, viewport-centered traveling tooth runs on EVERY breakpoint — no
+`matchMedia` gate, no `hidden md:flex`, no separate in-flow mobile tooth. The
+tooth + splash + giant heading are ONE centered composition that travels/rotates
+down the page on scroll identically on phone and desktop ("same to same" —
+explicit user request that REVERSES the earlier desktop-only approach).
+Mobile-only tuning that makes it read well without covering content:
+- Nudge the whole centered group UP on mobile (`-translate-y-[9vh] md:translate-y-0`
+  on BOTH fixed layers, `top-[40%] md:top-1/2` on the heading) so the SOLID tooth
+  clears the appointment-card copy; only the sparse splash tendrils may lightly
+  overlap.
+- SHRINK the giant "SMILE MATTERS" serif on mobile or the widest word
+  ("MATTERS") overflows and is clipped at the screen edges — use ~`text-[17vw]`
+  base (`md:text-[20vw]`, `lg:text-[17.5vw]`).
+**Why:** the user first wanted a clean/stacked mobile hero, then reversed and
+explicitly asked for the SAME traveling animation on mobile, centered, with the
+heading fully visible. The old over-content overlap + right-shift are avoided by
+(a) global `overflow-x:hidden` guards + `overflow-hidden` on both fixed layers
+(kills the right-shift even with a fixed x-transform on mobile — keep `kx≈0.2`),
+(b) nudging the group up so the tooth body clears the card, and (c) shrinking the
+heading so it isn't clipped. This supersedes the older "desktop-only tooth" note.
