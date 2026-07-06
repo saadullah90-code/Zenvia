@@ -28,16 +28,33 @@ tooth inside that section would trap them — no z-index could push them below t
 sibling fixed tooth. Keep backgrounds in the low `z=1` backdrop layer, keep
 readable content in the `z=20` section, keep the tooth as a top-level sibling.
 
-**Mobile right-shift fix:** A `position: fixed` element escapes `body` overflow
-clipping, so the tooth's GSAP x-transform created horizontal scroll that shifted
-the whole page RIGHT on mobile. Fixed by (1) `overflow-hidden` on the fixed
-tooth container, (2) a global guard `html, body, #root { max-width:100%;
-overflow-x:hidden }`, and (3) a reduced mobile sway coefficient (`kx`). Keep all
-three — dropping any one can bring the horizontal scroll back.
+**DESKTOP-ONLY: the fixed tooth is not the whole story.** The three-sibling
+stacking + "tooth on top" rule above applies to DESKTOP (`min-width:768px`)
+ONLY. On MOBILE the fixed traveling tooth is removed entirely (`hidden md:flex`
+on the container + GSAP gated via `mm.add('(min-width:768px)', ...)`), because a
+fixed tooth that floats over every section covers the appointment card copy and
+the contact form on small screens, and its x-transform caused a page right-shift
+(see below). On mobile the tooth is instead an `md:hidden` IN-FLOW element at the
+top of the hero (still with the splash-pop + tooth-drop + idle-tilt intro), so
+the hero reads as a clean vertical stack: tooth+splash → appointment card →
+stats, with nothing overlapping. Do NOT reintroduce a fixed traveling tooth on
+mobile.
+**Why:** user was explicit that the mobile hero must be a clean stack with no
+floating-over-content and no horizontal shift; the older "same fixed animation
+on mobile too" approach was the exact cause of the overlap and right-shift.
 
-**Related:** the mobile `.hero-info-card` is made fully opaque (solid white,
-`backdrop-filter: none`) under 767px so the tooth traveling in front of / behind
-it never bleeds through the copy.
+**Mobile right-shift (root cause of making it desktop-only):** A `position:
+fixed` element escapes `body` overflow clipping, so the tooth's GSAP x-transform
+created horizontal scroll that shifted the whole page RIGHT on mobile. Making the
+fixed tooth desktop-only removes this on mobile; belt-and-suspenders guards
+remain for all breakpoints: `overflow-hidden` on the (desktop) fixed tooth
+container, a global guard `html, body, #root { max-width:100%; overflow-x:hidden
+}`, `overflow-x-hidden` on the page root, and hardened `.input` fields
+(`max-width:100%; min-width:0; box-sizing:border-box`) so the Contact form never
+overflows.
+
+**Related:** the mobile `.hero-info-card` is kept fully opaque (solid white,
+`backdrop-filter: none`) under 767px for maximum legibility in the stacked hero.
 
 # Vite HMR does not reliably apply structural JSX changes here
 

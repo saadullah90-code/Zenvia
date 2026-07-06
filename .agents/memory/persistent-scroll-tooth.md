@@ -28,6 +28,20 @@ A fixed, viewport-centered object with only tiny ±y offsets reads as side-to-si
 ## Compositing a hero object inside a backdrop (tooth-in-splash)
 To align a foreground PNG perfectly inside a backdrop PNG (tooth inside a liquid splash), put BOTH in the same fixed viewport-centered box (`fixed inset-0 flex items-center justify-center` → sized relative box). The backdrop is `absolute inset-0`; the moving object sits in an inner absolutely-centered node that GSAP transforms. On scroll, fade the backdrop out (it belongs to the hero) via its own scrub trigger while the object travels. This guarantees pixel-alignment without guesswork.
 
-## Running the same hero animation on mobile (not desktop-only)
-The composited fixed unit can run on ALL devices — no separate static mobile copy needed. Use a `gsap.matchMedia({ isDesktop: '(min-width:768px)', isMobile: '(max-width:767px)' })` context and read `ctx.conditions` to tune per-breakpoint: mobile uses a smaller horizontal sway coefficient (`kx`), a smaller base scale, and lower travel opacity so the fixed tooth never obscures section copy. Keep the fixed layer `pointer-events-none` so it never blocks clicks even though it is the TOP visual layer (tooth `z-30` sits ABOVE the content `z-20`; see hero-stacking-and-mobile.md — the tooth must be on top because content sections are opaque and would otherwise hide it). Bias the container upward on mobile (`items-start` + top padding) so the tooth sits above the fold's text.
-**Why:** user explicitly wanted the SAME splash-pop / tooth-drop / scroll-rotate animation on mobile as desktop; the old `hidden md:flex` static-mobile approach did not satisfy that.
+## The fixed traveling tooth is DESKTOP-ONLY; mobile uses an in-flow tooth
+Do NOT run the fixed/traveling tooth on mobile. A `position:fixed` tooth that
+travels over every section floats ON TOP of the appointment card and contact
+form on small screens (covering copy and inputs) and its x-transform pushes the
+page right. Gate the whole fixed unit to desktop: `hidden md:flex` on the
+container AND `gsap.matchMedia().add('(min-width:768px)', ...)` so the scroll
+travel/splash-fade only ever runs ≥768px. On MOBILE render a separate `md:hidden`
+IN-FLOW tooth+splash at the top of the hero — it still gets the intro
+(splash-pop + tooth-drop + idle-tilt, gated on `!loading`) but has NO scroll
+travel, so the hero is a clean vertical stack (tooth+splash → appointment card →
+stats) with nothing overlapping and no horizontal shift.
+**Why:** an earlier attempt ran the SAME fixed traveling animation on mobile
+(tuning `kx`/scale/opacity per breakpoint); that was the exact cause of the
+over-content overlap and right-shift the user complained about. The intro
+animations on mobile are fine — only the fixed scroll-travel must stay
+desktop-only. This supersedes any older "run the same animation on all devices"
+note.

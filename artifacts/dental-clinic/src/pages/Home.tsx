@@ -79,65 +79,62 @@ export default function Home() {
         });
       });
 
-      // Traveling + rotating tooth — same animation on desktop AND mobile, tuned per size
+      // Traveling + rotating tooth — DESKTOP ONLY. On mobile the tooth is an in-flow
+      // element inside the hero (see the md:hidden block below) so it never floats over
+      // and covers the appointment card / contact form, and never causes a horizontal shift.
       const mm = gsap.matchMedia();
-      mm.add(
-        { isDesktop: '(min-width: 768px)', isMobile: '(max-width: 767px)' },
-        (context) => {
-          const outer = toothOuter.current;
-          if (!outer) return;
+      mm.add('(min-width: 768px)', () => {
+        const outer = toothOuter.current;
+        if (!outer) return;
 
-          const { isDesktop } = context.conditions as { isDesktop: boolean; isMobile: boolean };
-          const vw = () => window.innerWidth;
-          const vh = () => window.innerHeight;
+        const vw = () => window.innerWidth;
+        const vh = () => window.innerHeight;
+        const kx = 0.22; // horizontal sway (bounded so the tooth never leaves the viewport)
+        const s0 = 1; // base scale
+        const op = 0.95; // travel opacity — kept high so the tooth stays crisp/visible the whole way down
 
-          const kx = isDesktop ? 0.22 : 0.14; // horizontal sway (bounded so the tooth never leaves the viewport)
-          const s0 = isDesktop ? 1 : 0.92; // base scale
-          const op = 0.95; // travel opacity — kept high so the tooth stays crisp/visible the whole way down
+        gsap.set(outer, { x: 0, y: 0, rotate: 0, scale: s0, opacity: 1 });
 
-          gsap.set(outer, { x: 0, y: 0, rotate: 0, scale: s0, opacity: 1 });
-
-          // Splash belongs to the hero — smoothly fade it out as the hero leaves,
-          // and it fades back in when scrolling back up (scrub reverses automatically).
-          if (splashRef.current) {
-            gsap.to(splashRef.current, {
-              opacity: 0,
-              scale: 0.78,
-              ease: 'power1.inOut',
-              scrollTrigger: {
-                trigger: '#home',
-                start: 'top top',
-                end: 'bottom 30%',
-                scrub: 1.2,
-                invalidateOnRefresh: true,
-              },
-            });
-          }
-
-          // Tooth travels DOWN the page (monotonic y), sways side to side, rotates continuously,
-          // and returns to a fully upright position (360deg) by the footer — just like it started.
-          const tl = gsap.timeline({
+        // Splash belongs to the hero — smoothly fade it out as the hero leaves,
+        // and it fades back in when scrolling back up (scrub reverses automatically).
+        if (splashRef.current) {
+          gsap.to(splashRef.current, {
+            opacity: 0,
+            scale: 0.78,
+            ease: 'power1.inOut',
             scrollTrigger: {
-              trigger: mainRef.current,
+              trigger: '#home',
               start: 'top top',
-              end: 'bottom bottom',
-              scrub: 1,
+              end: 'bottom 30%',
+              scrub: 1.2,
               invalidateOnRefresh: true,
             },
           });
+        }
 
-          tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.14, rotate: 55, scale: s0 * 0.82, opacity: op, ease: 'none' })
-            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.24, rotate: 130, scale: s0 * 0.72, opacity: op, ease: 'none' })
-            .to(outer, { x: () => -vw() * (kx * 0.85), y: () => vh() * 0.3, rotate: 210, scale: s0 * 0.64, opacity: op, ease: 'none' })
-            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 300, scale: s0 * 0.62, opacity: op, ease: 'none' })
-            .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
+        // Tooth travels DOWN the page (monotonic y), sways side to side, rotates continuously,
+        // and returns to a fully upright position (360deg) by the footer — just like it started.
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: mainRef.current,
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: 1,
+            invalidateOnRefresh: true,
+          },
+        });
 
-          return () => {
-            gsap.set(outer, { clearProps: 'all' });
-            if (splashRef.current) gsap.set(splashRef.current, { clearProps: 'all' });
-          };
-        },
-      );
+        tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.14, rotate: 55, scale: s0 * 0.82, opacity: op, ease: 'none' })
+          .to(outer, { x: () => vw() * kx, y: () => vh() * 0.24, rotate: 130, scale: s0 * 0.72, opacity: op, ease: 'none' })
+          .to(outer, { x: () => -vw() * (kx * 0.85), y: () => vh() * 0.3, rotate: 210, scale: s0 * 0.64, opacity: op, ease: 'none' })
+          .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 300, scale: s0 * 0.62, opacity: op, ease: 'none' })
+          .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
+
+        return () => {
+          gsap.set(outer, { clearProps: 'all' });
+          if (splashRef.current) gsap.set(splashRef.current, { clearProps: 'all' });
+        };
+      });
 
       return () => mm.revert();
     }, mainRef);
@@ -158,9 +155,10 @@ export default function Home() {
 
       <Navbar />
 
-      {/* Fixed tooth + splash unit (all devices) — splash pops up, tooth drops from top, travels + rotates */}
+      {/* Fixed traveling tooth + splash unit — DESKTOP ONLY (mobile uses the in-flow tooth
+          inside the hero). Splash pops up, tooth drops from the top, then travels + rotates on scroll. */}
       <div
-        className="fixed inset-0 z-30 pointer-events-none flex justify-center items-start overflow-hidden pt-[7vh] sm:pt-[8vh] md:pt-[10vh]"
+        className="fixed inset-0 z-30 pointer-events-none hidden md:flex justify-center items-start overflow-hidden md:pt-[10vh]"
         style={{ perspective: 1000 }}
       >
         <div className="relative w-[72vw] max-w-[300px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] aspect-square">
@@ -209,11 +207,8 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Hero backdrop (BELOW the tooth): gradient, glow blob, and giant serif typography.
-          This is a sibling layer UNDER the fixed tooth so the tooth renders in front of the
-          serif/background but still behind the hero card (which lives in the section above).
-          The card cannot beat the tooth via z-index alone because the section forms its own
-          stacking context, so we split the hero across three sibling layers instead. */}
+      {/* Hero backdrop (lowest layer, z-1): gradient, glow blob, and giant serif typography.
+          Sibling layer below both the hero content (z-20) and the desktop fixed tooth (z-30). */}
       <div
         className="absolute top-0 inset-x-0 h-screen overflow-hidden pointer-events-none"
         style={{ zIndex: 1 }}
@@ -235,20 +230,52 @@ export default function Home() {
         </motion.h1>
       </div>
 
-      {/* ===== HERO ===== (transparent, ABOVE the tooth so card/stats stay readable over it) */}
+      {/* ===== HERO ===== content layer (z-20). On mobile it also holds the in-flow tooth
+          (stacked: tooth → appointment card → stats) so nothing overlaps or shifts. */}
       <section
         id="home"
-        className="relative min-h-screen flex flex-col overflow-hidden pt-28 pb-14"
+        className="relative min-h-screen flex flex-col overflow-hidden pt-24 md:pt-28 pb-14"
         style={{ zIndex: 20 }}
       >
-        <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-end">
-          {/* Info card + stats (above the tooth) */}
-          <div className="grid lg:grid-cols-2 gap-8 items-end mt-auto relative">
+        <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-start md:justify-end gap-8 sm:gap-10">
+          {/* MOBILE-only in-flow tooth + splash (desktop uses the fixed traveling tooth above) */}
+          <div className="md:hidden relative mx-auto w-[72vw] max-w-[300px] aspect-square shrink-0 mt-2">
+            <motion.div
+              initial={{ scale: 0.3, opacity: 0 }}
+              animate={loading ? {} : { scale: 1, opacity: 1 }}
+              transition={{ type: 'spring', stiffness: 130, damping: 13, delay: 0.2 }}
+              className="absolute inset-0"
+            >
+              <img src="/splash-blue.png" alt="" aria-hidden className="w-full h-full object-contain" />
+            </motion.div>
+            <motion.div
+              initial={{ y: -180, opacity: 0, rotate: -14 }}
+              animate={loading ? {} : { y: 0, opacity: 1, rotate: 0 }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1], delay: 0.35 }}
+              className="absolute inset-0 flex items-center justify-center"
+            >
+              <motion.div
+                animate={{ rotate: [-4, 4, -4] }}
+                transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                className="relative w-[60%]"
+              >
+                <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/25 blur-3xl" />
+                <img
+                  src="/tooth-hero.png"
+                  alt="3D dental tooth"
+                  className="relative w-full drop-shadow-[0_20px_34px_rgba(20,120,200,0.35)]"
+                />
+              </motion.div>
+            </motion.div>
+          </div>
+
+          {/* Info card + stats */}
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-end md:mt-auto relative">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={loading ? {} : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.4 }}
-              className="glass-card hero-info-card rounded-3xl p-7 max-w-md"
+              className="glass-card hero-info-card rounded-3xl p-6 sm:p-7 w-full max-w-md mx-auto md:mx-0"
             >
               <p className="text-foreground/70 font-semibold leading-relaxed">
                 Our skilled dentists use advanced technology to offer complete care in a comfortable

@@ -109,6 +109,11 @@ export function Contact() {
       <style>{`
         .input {
           width: 100%;
+          max-width: 100%;
+          min-width: 0;
+          box-sizing: border-box;
+          -webkit-appearance: none;
+          appearance: none;
           border-radius: 0.9rem;
           border: 1px solid hsl(var(--border));
           background: hsl(var(--muted) / 0.4);
@@ -118,6 +123,7 @@ export function Contact() {
           outline: none;
           transition: border-color .2s, box-shadow .2s;
         }
+        .input::-webkit-date-and-time-value { text-align: left; }
         .input:focus {
           border-color: hsl(var(--primary));
           box-shadow: 0 0 0 3px hsl(var(--primary) / 0.15);
