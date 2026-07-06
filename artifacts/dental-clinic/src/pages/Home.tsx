@@ -31,7 +31,7 @@ export default function Home() {
   const mainRef = useRef<HTMLDivElement>(null);
   const toothOuter = useRef<HTMLDivElement>(null);
   const splashRef = useRef<HTMLImageElement>(null);
-  const mobileTooth = useRef<HTMLDivElement>(null);
+  const mobileTravel = useRef<HTMLDivElement>(null);
 
   // Framer mouse tilt for the floating tooth (kept on a separate node from GSAP)
   const tiltX = useMotionValue(0);
@@ -133,28 +133,44 @@ export default function Home() {
         .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
     });
 
-    // MOBILE (<768px): the tooth keeps its IN-FLOW layout slot (so the stacked hero
-    // never shifts) but MOVES with scroll — a scrubbed drift (x sway + downward y)
-    // plus a full 0->360 spin across the hero scroll range. It is transform-only (no
-    // layout change) and the appointment card sits LATER in the DOM, so the card
-    // always paints on TOP — the tooth glides behind it, never covering the copy.
+    // MOBILE (<768px): a dedicated FIXED tooth travels DOWN the page as you scroll,
+    // like desktop. It stays HIDDEN (opacity 0) over the hero so it never covers the
+    // in-flow appointment card, then FADES IN as the hero scrolls out and glides
+    // downward + rotates over the lower sections. It is `pointer-events-none`, so it
+    // never blocks taps. The in-flow hero tooth (the stacked centerpiece) scrolls
+    // away naturally before this one appears, so there is never a double tooth.
     mm.add('(max-width: 767px)', () => {
-      const el = mobileTooth.current;
+      const el = mobileTravel.current;
       if (!el) return;
       const vh = () => window.innerHeight;
-      gsap.set(el, { x: 0, y: 0, rotate: 0 });
-      const tlm = gsap.timeline({
+      gsap.set(el, { y: () => -vh() * 0.16, rotate: 0, opacity: 0 });
+
+      // Fade in as the hero leaves the viewport.
+      gsap.to(el, {
+        opacity: 1,
+        ease: 'none',
         scrollTrigger: {
           trigger: '#home',
+          start: 'bottom 75%',
+          end: 'bottom 35%',
+          scrub: true,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      // Travel DOWN the viewport + rotate across the whole page.
+      gsap.to(el, {
+        y: () => vh() * 0.34,
+        rotate: 360,
+        ease: 'none',
+        scrollTrigger: {
+          trigger: mainRef.current,
           start: 'top top',
-          end: 'bottom top',
+          end: 'bottom bottom',
           scrub: 1,
           invalidateOnRefresh: true,
         },
       });
-      tlm
-        .to(el, { x: 34, y: () => vh() * 0.12, rotate: 180, ease: 'none' })
-        .to(el, { x: -34, y: () => vh() * 0.26, rotate: 360, ease: 'none' });
     });
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);
@@ -256,6 +272,22 @@ export default function Home() {
         </div>
       </div>
 
+      {/* MOBILE-only fixed traveling tooth (z-40, below the z-50 navbar). Hidden over
+          the hero via GSAP opacity 0 so it never covers the appointment card, then
+          fades in and travels DOWN the page as you scroll (like desktop).
+          pointer-events-none so it never blocks taps. */}
+      <div className="md:hidden fixed inset-0 z-40 pointer-events-none flex justify-center items-center overflow-hidden">
+        <div ref={mobileTravel} className="relative w-[46vw] max-w-[220px]">
+          <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/20 blur-3xl" />
+          <img
+            src="/tooth-hero.png"
+            alt=""
+            aria-hidden
+            className="relative w-full drop-shadow-[0_24px_38px_rgba(20,120,200,0.35)]"
+          />
+        </div>
+      </div>
+
       {/* ===== HERO ===== content layer (z-20). DESKTOP: card + stats sit at the
           BOTTOM while the fixed tooth+splash+heading float centered above them.
           MOBILE: a clean vertical stack — the in-flow tooth+splash+heading block
@@ -300,21 +332,20 @@ export default function Home() {
                 transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.45 }}
                 className="relative w-[58%]"
               >
-                {/* GSAP scroll-rotation node (mobile) — kept separate from Framer's
-                    intro drop + idle wobble so no single node has two transform authors. */}
-                <div ref={mobileTooth}>
-                  <motion.div
-                    animate={{ rotate: [-4, 4, -4] }}
-                    transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
-                  >
-                    <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/25 blur-3xl" />
-                    <img
-                      src="/tooth-hero.png"
-                      alt="3D dental tooth"
-                      className="relative w-full drop-shadow-[0_28px_42px_rgba(20,120,200,0.35)]"
-                    />
-                  </motion.div>
-                </div>
+                {/* Idle wobble — kept on its own node so Framer's intro drop and this
+                    idle tilt never author the same transform. The mobile scroll
+                    "travel" is handled by the separate fixed tooth layer below. */}
+                <motion.div
+                  animate={{ rotate: [-4, 4, -4] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/25 blur-3xl" />
+                  <img
+                    src="/tooth-hero.png"
+                    alt="3D dental tooth"
+                    className="relative w-full drop-shadow-[0_28px_42px_rgba(20,120,200,0.35)]"
+                  />
+                </motion.div>
               </motion.div>
             </div>
           </div>

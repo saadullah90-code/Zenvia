@@ -34,15 +34,17 @@ Gate the fixed/traveling tooth + splash-fade to desktop with
 tooth layer, and giant backdrop heading `hidden md:flex`. On MOBILE render an
 `md:hidden` IN-FLOW block at the TOP of the hero holding the giant "SMILE MATTERS"
 heading FIRST (visible fade-in), then the splash + tooth below it, then (in normal
-document flow) the appointment card, then the stats. The in-flow tooth still gets the intro
-(splash-pop + tooth-drop + idle-tilt, gated on `!loading`) and IS scroll-reactive on
-mobile via a `gsap.matchMedia('(max-width:767px)')` scrubbed timeline that drifts
-(x sway + downward y) and spins it across the hero scroll range. Two rules make this
-safe where the old FIXED z-30 traveling tooth was not: (1) it is TRANSFORM-ONLY on an
-in-flow node, so the layout slot never changes — no stacked-hero shift, no horizontal
-scroll; (2) the appointment card is LATER in the DOM, so it always paints on top and
-the tooth glides BEHIND it instead of covering the copy. Keep GSAP's scroll transform,
-Framer's intro drop, and Framer's idle wobble on separate nested nodes (one transform
+document flow) the appointment card, then the stats. The in-flow hero tooth is the STACKED
+CENTERPIECE only — it does the intro (splash-pop + tooth-drop + idle-tilt) and scrolls
+away naturally; it does NOT itself travel on scroll. An in-flow node just scrolls up
+with the hero, so it can NEVER look like it "comes down" — that was the repeated user
+complaint. To get visible DOWNWARD travel on mobile like desktop WITHOUT covering the
+appointment card, use a SEPARATE mobile-only FIXED traveling-tooth layer (below the
+navbar, pointer-events-none): keep it invisible over the hero (so it never covers the
+card — the exact thing the user rejected), FADE it in as the hero scrolls out, then
+scrub it downward + rotate across the page. The in-flow hero tooth is off-screen by
+the time the fixed one fades in, so there is never a double tooth. Keep GSAP scroll
+transforms, Framer intro drop, and Framer idle wobble on separate nodes (one transform
 author per node).
 **Why:** a `position:fixed` tooth that travels over every section floats ON TOP of
 the appointment card on small screens (covering the copy) and its x-transform can
