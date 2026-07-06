@@ -1,2 +1,2 @@
-- [Zenvia hero stacking: splash behind cards, tooth on top](hero-stacking-and-mobile.md) — 4 sibling z-layers (splash split into its own z10 layer behind cards, tooth z30 on top); restart workflow after structural JSX edits.
-- [Persistent scroll tooth runs on ALL devices](persistent-scroll-tooth.md) — traveling tooth now on every breakpoint (no matchMedia); mobile nudges group up + shrinks heading; overflow guards prevent right-shift.
+- [Zenvia hero stacking + mobile](hero-stacking-and-mobile.md) — desktop = fixed splash-behind-cards + tooth-on-top layers; mobile = in-flow stacked hero. Restart workflow after structural JSX edits.
+- [Persistent scroll tooth is DESKTOP-only](persistent-scroll-tooth.md) — fixed traveling tooth gated to min-width:768px; mobile uses in-flow tooth+splash+heading block (no travel) so it never covers the card.

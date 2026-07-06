@@ -55,7 +55,7 @@ export default function Home() {
     return () => window.removeEventListener('mousemove', onMove);
   }, [tiltX, tiltY]);
 
-  // Smooth scroll + traveling / rotating tooth (desktop + mobile)
+  // Smooth scroll + traveling / rotating tooth (DESKTOP only; mobile is a clean stack)
   useEffect(() => {
     if (loading) return;
 
@@ -78,62 +78,65 @@ export default function Home() {
           scrollTrigger: { trigger: el, start: 'top 85%' },
         });
       });
+    }, mainRef);
 
-      // Traveling + rotating tooth — runs on ALL devices (desktop + mobile).
-      // Horizontal sway is bounded and both fixed layers are overflow-hidden, plus a
-      // global html/body/#root overflow-x:hidden guard, so mobile never gets a
-      // horizontal shift even though the tooth travels over the page.
+    // Traveling + rotating tooth — DESKTOP ONLY (min-width:768px). On mobile the
+    // hero is a clean vertical stack (in-flow tooth+splash+heading, then the card,
+    // then stats) so the fixed tooth never floats over / covers the appointment card.
+    const mm = gsap.matchMedia();
+    mm.add('(min-width: 768px)', () => {
       const outer = toothOuter.current;
-      if (outer) {
-        const vw = () => window.innerWidth;
-        const vh = () => window.innerHeight;
-        const kx = 0.2; // horizontal sway (bounded so the tooth stays in view)
-        const s0 = 1; // base scale
-        const op = 0.95; // travel opacity — kept high so the tooth stays crisp the whole way down
+      if (!outer) return;
 
-        gsap.set(outer, { x: 0, y: 0, rotate: 0, scale: s0, opacity: 1 });
+      const vw = () => window.innerWidth;
+      const vh = () => window.innerHeight;
+      const kx = 0.2; // horizontal sway (bounded so the tooth stays in view)
+      const s0 = 1; // base scale
+      const op = 0.95; // travel opacity — kept high so the tooth stays crisp the whole way down
 
-        // Splash belongs to the hero — smoothly fade it out as the hero leaves,
-        // and it fades back in when scrolling back up (scrub reverses automatically).
-        if (splashRef.current) {
-          gsap.to(splashRef.current, {
-            opacity: 0,
-            scale: 0.78,
-            ease: 'power1.inOut',
-            scrollTrigger: {
-              trigger: '#home',
-              start: 'top top',
-              end: 'bottom 30%',
-              scrub: 1.2,
-              invalidateOnRefresh: true,
-            },
-          });
-        }
+      gsap.set(outer, { x: 0, y: 0, rotate: 0, scale: s0, opacity: 1 });
 
-        // Tooth travels DOWN the page (monotonic y), sways side to side, rotates continuously,
-        // and returns to a fully upright position (360deg) by the footer — just like it started.
-        const tl = gsap.timeline({
+      // Splash belongs to the hero — smoothly fade it out as the hero leaves,
+      // and it fades back in when scrolling back up (scrub reverses automatically).
+      if (splashRef.current) {
+        gsap.to(splashRef.current, {
+          opacity: 0,
+          scale: 0.78,
+          ease: 'power1.inOut',
           scrollTrigger: {
-            trigger: mainRef.current,
+            trigger: '#home',
             start: 'top top',
-            end: 'bottom bottom',
-            scrub: 1,
+            end: 'bottom 30%',
+            scrub: 1.2,
             invalidateOnRefresh: true,
           },
         });
-
-        tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.14, rotate: 55, scale: s0 * 0.82, opacity: op, ease: 'none' })
-          .to(outer, { x: () => vw() * kx, y: () => vh() * 0.24, rotate: 130, scale: s0 * 0.72, opacity: op, ease: 'none' })
-          .to(outer, { x: () => -vw() * (kx * 0.85), y: () => vh() * 0.3, rotate: 210, scale: s0 * 0.64, opacity: op, ease: 'none' })
-          .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 300, scale: s0 * 0.62, opacity: op, ease: 'none' })
-          .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
       }
-    }, mainRef);
+
+      // Tooth travels DOWN the page (monotonic y), sways side to side, rotates continuously,
+      // and returns to a fully upright position (360deg) by the footer — just like it started.
+      const tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: mainRef.current,
+          start: 'top top',
+          end: 'bottom bottom',
+          scrub: 1,
+          invalidateOnRefresh: true,
+        },
+      });
+
+      tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.14, rotate: 55, scale: s0 * 0.82, opacity: op, ease: 'none' })
+        .to(outer, { x: () => vw() * kx, y: () => vh() * 0.24, rotate: 130, scale: s0 * 0.72, opacity: op, ease: 'none' })
+        .to(outer, { x: () => -vw() * (kx * 0.85), y: () => vh() * 0.3, rotate: 210, scale: s0 * 0.64, opacity: op, ease: 'none' })
+        .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 300, scale: s0 * 0.62, opacity: op, ease: 'none' })
+        .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
+    });
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);
 
     return () => {
       window.clearTimeout(refreshId);
+      mm.revert();
       ctx.revert();
       gsap.ticker.remove(ticker);
       lenis.destroy();
@@ -149,7 +152,7 @@ export default function Home() {
       {/* Fixed SPLASH layer — sits BEHIND the hero cards (z-10, above the z-1 backdrop,
           below the z-20 content). Framer pops it up on load; GSAP fades it on scroll
           (separate nodes, no transform conflict). Same centered box as the tooth so they align. */}
-      <div className="fixed inset-0 z-10 pointer-events-none flex justify-center items-center overflow-hidden -translate-y-[9vh] md:translate-y-0">
+      <div className="hidden md:flex fixed inset-0 z-10 pointer-events-none justify-center items-center overflow-hidden">
         <div className="relative w-[72vw] max-w-[300px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] aspect-square">
           <motion.div
             initial={{ scale: 0.2, opacity: 0 }}
@@ -180,7 +183,7 @@ export default function Home() {
           initial={{ opacity: 0, y: 30 }}
           animate={loading ? {} : { opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.22, 1, 0.36, 1], delay: 0.1 }}
-          className="absolute inset-x-0 top-[40%] md:top-1/2 -translate-y-1/2 flex flex-col items-center text-center leading-[0.76] select-none px-3"
+          className="absolute inset-x-0 top-1/2 -translate-y-1/2 hidden md:flex flex-col items-center text-center leading-[0.76] select-none px-3"
         >
           <span className="font-serif-display uppercase text-[17vw] md:text-[20vw] lg:text-[17.5vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/40 via-primary/20 to-primary/[0.06]">
             Smile
@@ -191,11 +194,11 @@ export default function Home() {
         </motion.h1>
       </div>
 
-      {/* Fixed TOOTH layer — the TOP visual layer (z-30, below only the z-50 navbar).
-          Drops in from the top on load, then travels + rotates on scroll (ALL devices).
-          pointer-events-none so it never blocks clicks on the content underneath. */}
+      {/* Fixed TOOTH layer (DESKTOP only, hidden md:flex) — the TOP visual layer
+          (z-30, below only the z-50 navbar). Drops in on load, then travels + rotates
+          on scroll. pointer-events-none so it never blocks clicks underneath. */}
       <div
-        className="fixed inset-0 z-30 pointer-events-none flex justify-center items-center overflow-hidden -translate-y-[9vh] md:translate-y-0"
+        className="hidden md:flex fixed inset-0 z-30 pointer-events-none justify-center items-center overflow-hidden"
         style={{ perspective: 1000 }}
       >
         <div className="relative w-[72vw] max-w-[300px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] aspect-square">
@@ -228,16 +231,64 @@ export default function Home() {
         </div>
       </div>
 
-      {/* ===== HERO ===== content layer (z-20): appointment card + stats sit at the
-          BOTTOM (all devices) so the centered tooth+splash+heading read above them. */}
+      {/* ===== HERO ===== content layer (z-20). DESKTOP: card + stats sit at the
+          BOTTOM while the fixed tooth+splash+heading float centered above them.
+          MOBILE: a clean vertical stack — the in-flow tooth+splash+heading block
+          sits in the middle-top, then the card, then stats (nothing overlaps). */}
       <section
         id="home"
         className="relative min-h-screen flex flex-col overflow-hidden pt-24 md:pt-28 pb-14"
         style={{ zIndex: 20 }}
       >
-        <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-end gap-8 sm:gap-10">
+        <div className="container mx-auto px-5 relative flex-1 flex flex-col justify-start md:justify-end gap-8 sm:gap-10">
+          {/* MOBILE-only hero composition: giant "SMILE MATTERS" heading + splash +
+              tooth centered as one group; the card + stats stack BELOW it so nothing
+              overlaps. Desktop hides this and uses the fixed traveling tooth. */}
+          <div className="md:hidden relative flex items-center justify-center pt-2 pb-1">
+            <div
+              aria-hidden
+              className="absolute inset-0 flex flex-col items-center justify-center text-center leading-[0.76] select-none pointer-events-none"
+            >
+              <span className="font-serif-display uppercase text-[16vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/40 via-primary/20 to-primary/[0.06]">
+                Smile
+              </span>
+              <span className="font-serif-display uppercase text-[16vw] tracking-tight text-transparent bg-clip-text bg-gradient-to-b from-primary/30 via-primary/15 to-primary/[0.04] -mt-[0.14em]">
+                Matters
+              </span>
+            </div>
+            <div className="relative w-[78vw] max-w-[330px] aspect-square flex items-center justify-center">
+              <motion.img
+                initial={{ scale: 0.2, opacity: 0 }}
+                animate={loading ? {} : { scale: 1, opacity: 1 }}
+                transition={{ type: 'spring', stiffness: 130, damping: 12, delay: 0.25 }}
+                src="/splash-blue.png"
+                alt=""
+                aria-hidden
+                className="absolute inset-0 w-full h-full object-contain"
+              />
+              <motion.div
+                initial={{ y: -300, opacity: 0, rotate: -16 }}
+                animate={loading ? {} : { y: 0, opacity: 1, rotate: 0 }}
+                transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1], delay: 0.4 }}
+                className="relative w-[60%]"
+              >
+                <motion.div
+                  animate={{ rotate: [-4, 4, -4] }}
+                  transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <div className="absolute inset-0 m-auto w-4/5 h-4/5 rounded-full bg-primary/25 blur-3xl" />
+                  <img
+                    src="/tooth-hero.png"
+                    alt="3D dental tooth"
+                    className="relative w-full drop-shadow-[0_28px_42px_rgba(20,120,200,0.35)]"
+                  />
+                </motion.div>
+              </motion.div>
+            </div>
+          </div>
+
           {/* Info card + stats */}
-          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-end mt-auto relative">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8 items-end mt-0 md:mt-auto relative">
             <motion.div
               initial={{ opacity: 0, y: 40 }}
               animate={loading ? {} : { opacity: 1, y: 0 }}

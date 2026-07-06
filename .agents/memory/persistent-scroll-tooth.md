@@ -28,24 +28,20 @@ A fixed, viewport-centered object with only tiny ±y offsets reads as side-to-si
 ## Compositing a hero object inside a backdrop (tooth-in-splash)
 To align a foreground PNG perfectly inside a backdrop PNG (tooth inside a liquid splash), put BOTH in the same fixed viewport-centered box (`fixed inset-0 flex items-center justify-center` → sized relative box). The backdrop is `absolute inset-0`; the moving object sits in an inner absolutely-centered node that GSAP transforms. On scroll, fade the backdrop out (it belongs to the hero) via its own scrub trigger while the object travels. This guarantees pixel-alignment without guesswork.
 
-## The fixed traveling tooth runs on ALL devices (desktop + mobile)
-The fixed, viewport-centered traveling tooth runs on EVERY breakpoint — no
-`matchMedia` gate, no `hidden md:flex`, no separate in-flow mobile tooth. The
-tooth + splash + giant heading are ONE centered composition that travels/rotates
-down the page on scroll identically on phone and desktop ("same to same" —
-explicit user request that REVERSES the earlier desktop-only approach).
-Mobile-only tuning that makes it read well without covering content:
-- Nudge the whole centered group UP on mobile (`-translate-y-[9vh] md:translate-y-0`
-  on BOTH fixed layers, `top-[40%] md:top-1/2` on the heading) so the SOLID tooth
-  clears the appointment-card copy; only the sparse splash tendrils may lightly
-  overlap.
-- SHRINK the giant "SMILE MATTERS" serif on mobile or the widest word
-  ("MATTERS") overflows and is clipped at the screen edges — use ~`text-[17vw]`
-  base (`md:text-[20vw]`, `lg:text-[17.5vw]`).
-**Why:** the user first wanted a clean/stacked mobile hero, then reversed and
-explicitly asked for the SAME traveling animation on mobile, centered, with the
-heading fully visible. The old over-content overlap + right-shift are avoided by
-(a) global `overflow-x:hidden` guards + `overflow-hidden` on both fixed layers
-(kills the right-shift even with a fixed x-transform on mobile — keep `kx≈0.2`),
-(b) nudging the group up so the tooth body clears the card, and (c) shrinking the
-heading so it isn't clipped. This supersedes the older "desktop-only tooth" note.
+## The fixed traveling tooth is DESKTOP-ONLY; mobile is a clean in-flow stack
+Gate the fixed/traveling tooth + splash-fade to desktop with
+`gsap.matchMedia('(min-width:768px)')`, and make the fixed splash layer, fixed
+tooth layer, and giant backdrop heading `hidden md:flex`. On MOBILE render an
+`md:hidden` IN-FLOW block at the TOP of the hero holding the giant "SMILE MATTERS"
+heading + splash + tooth centered as ONE group, then (in normal document flow) the
+appointment card, then the stats. The in-flow tooth still gets the intro
+(splash-pop + tooth-drop + idle-tilt, gated on `!loading`) but has NO scroll
+travel — so the mobile hero is a clean vertical stack with nothing overlapping.
+**Why:** a `position:fixed` tooth that travels over every section floats ON TOP of
+the appointment card on small screens (covering the copy) and its x-transform can
+push the page right. An interim attempt ran the SAME fixed traveling animation on
+ALL devices (nudging the group up + shrinking the heading); the user REJECTED it
+because the tooth still overlapped the appointment card. Durable rule: fixed
+traveling object = DESKTOP; MOBILE = in-flow stacked composition with the card
+BELOW it. The user also wants the splash BEHIND the cards on DESKTOP ONLY (on
+mobile the in-flow splash is simply part of the top group, never behind the card).

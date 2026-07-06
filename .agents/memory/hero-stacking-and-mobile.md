@@ -1,6 +1,6 @@
 ---
 name: Zenvia hero stacking + mobile overlap
-description: Why the hero tooth/splash/card layering is split into four sibling layers (splash behind cards, tooth on top), and the HMR-restart gotcha that masked the fix.
+description: Desktop hero = four fixed/sibling layers (splash behind cards, tooth on top); mobile = clean in-flow stack (heading+splash+tooth then card/stats). Plus the HMR-restart gotcha that masked the fix.
 ---
 
 # Hero stacking: splash BEHIND cards, tooth ON TOP of content
@@ -36,25 +36,28 @@ tooth inside that section would trap them — no z-index could push them below t
 sibling fixed tooth. Keep backgrounds in the low `z=1` backdrop layer, keep
 readable content in the `z=20` section, keep the tooth as a top-level sibling.
 
-**ALL DEVICES: the tooth travels on mobile too.** The traveling tooth now runs on
-EVERY breakpoint (no `matchMedia`, no `hidden md:flex`, no separate in-flow mobile
-tooth) — see `persistent-scroll-tooth.md`. The four-layer stacking + "tooth on
-top / splash behind cards" rule above is identical on mobile and desktop. On
-mobile the whole centered group is nudged UP (`-translate-y-[9vh] md:translate-y-0`
-on both fixed layers, heading `top-[40%] md:top-1/2`) so the solid tooth clears
-the appointment-card copy, and the giant heading shrinks (`text-[17vw]` base) so
-"MATTERS" isn't clipped. This REVERSES the earlier "desktop-only fixed tooth /
-mobile in-flow" decision.
+**DESKTOP-ONLY fixed tooth; MOBILE is an in-flow stack.** The four-layer fixed
+stacking above applies to DESKTOP (`min-width:768px`) ONLY — the fixed splash
+layer, the fixed tooth layer, and the giant backdrop heading are all
+`hidden md:flex`, and the GSAP travel is gated via
+`gsap.matchMedia('(min-width:768px)')`. On MOBILE the hero is a clean vertical
+stack: an `md:hidden` in-flow block at the top holds the giant "SMILE MATTERS"
+heading + splash + tooth centered as one group, then the appointment card, then
+stats — nothing overlaps. See `persistent-scroll-tooth.md`.
+**Why:** the fixed traveling tooth covered the mobile appointment card. An interim
+"same animation on all devices" attempt (nudging the group up + shrinking the
+heading) STILL overlapped the card, so the user reverted to desktop-only fixed /
+mobile in-flow. The user also wants the splash BEHIND the cards on DESKTOP only.
 
-**Mobile right-shift (now prevented by overflow guards, not by hiding the tooth):**
-A `position: fixed` element escapes `body` overflow clipping, so the tooth's GSAP
-x-transform can create horizontal scroll that shifts the whole page RIGHT on
-mobile. Since the traveling tooth now runs on mobile too, these guards are what
-keep it from shifting: `overflow-hidden` on BOTH fixed layers (splash + tooth), a
-global guard `html, body, #root { max-width:100%; overflow-x:hidden }`,
-`overflow-x-hidden` on the page root, a modest horizontal sway (`kx≈0.2`), and
-hardened `.input` fields (`max-width:100%; min-width:0; box-sizing:border-box`) so
-the Contact form never overflows.
+**Mobile right-shift (why the fixed tooth is desktop-only):** A `position:fixed`
+element escapes `body` overflow clipping, so a traveling tooth's GSAP x-transform
+created horizontal scroll that shifted the whole page RIGHT on mobile. Keeping the
+fixed tooth DESKTOP-only removes this on mobile (the mobile tooth is in-flow).
+Belt-and-suspenders guards remain for all breakpoints: `overflow-hidden` on the
+(desktop) fixed layers, a global `html, body, #root { max-width:100%;
+overflow-x:hidden }`, `overflow-x-hidden` on the page root, and hardened `.input`
+fields (`max-width:100%; min-width:0; box-sizing:border-box`) so the Contact form
+never overflows.
 
 **Related:** the mobile `.hero-info-card` is kept fully opaque (solid white,
 `backdrop-filter: none`) under 767px for maximum legibility in the stacked hero.
