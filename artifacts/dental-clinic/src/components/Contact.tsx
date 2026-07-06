@@ -20,12 +20,12 @@ export function Contact() {
           <div className="absolute -top-24 -right-24 w-96 h-96 bg-white/10 rounded-full blur-3xl" />
           <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-[#35c6ff]/30 rounded-full blur-3xl" />
 
-          <div className="relative grid lg:grid-cols-2 gap-10 p-8 md:p-14">
+          <div className="relative grid lg:grid-cols-2 gap-8 lg:gap-10 p-6 sm:p-8 md:p-14">
             {/* Left info */}
-            <div className="text-white">
+            <div className="text-white min-w-0">
               <p className="text-sm font-bold uppercase tracking-[0.25em] text-white/70 mb-3">Book Appointment</p>
-              <h2 className="text-4xl md:text-5xl font-extrabold leading-tight">
-                Ready for your<br />best smile yet?
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold leading-tight">
+                Ready for your <br className="hidden sm:block" />best smile yet?
               </h2>
               <p className="mt-5 text-white/85 max-w-md leading-relaxed">
                 Book a visit and our team will confirm your appointment shortly. We're open
@@ -40,10 +40,10 @@ export function Contact() {
                   { icon: Clock, label: 'Open daily · 10:00 AM – 07:00 PM' },
                 ].map((c) => (
                   <div key={c.label} className="flex items-center gap-3">
-                    <span className="w-10 h-10 rounded-full bg-white/15 flex items-center justify-center">
+                    <span className="w-10 h-10 shrink-0 rounded-full bg-white/15 flex items-center justify-center">
                       <c.icon size={18} />
                     </span>
-                    <span className="font-semibold">{c.label}</span>
+                    <span className="font-semibold break-words min-w-0">{c.label}</span>
                   </div>
                 ))}
               </div>
@@ -55,7 +55,7 @@ export function Contact() {
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="glass-card rounded-3xl p-7 md:p-8"
+              className="glass-card rounded-3xl p-6 sm:p-7 md:p-8 min-w-0"
             >
               <div className="grid gap-4">
                 <div className="grid sm:grid-cols-2 gap-4">

@@ -91,9 +91,9 @@ export default function Home() {
           const vw = () => window.innerWidth;
           const vh = () => window.innerHeight;
 
-          const kx = isDesktop ? 0.3 : 0.22; // horizontal sway
-          const s0 = isDesktop ? 1 : 0.9; // base scale
-          const op = isDesktop ? 1 : 0.85; // travel opacity (kept high so the tooth stays visible on mobile)
+          const kx = isDesktop ? 0.22 : 0.14; // horizontal sway (bounded so the tooth never leaves the viewport)
+          const s0 = isDesktop ? 1 : 0.92; // base scale
+          const op = 0.95; // travel opacity — kept high so the tooth stays crisp/visible the whole way down
 
           gsap.set(outer, { x: 0, y: 0, rotate: 0, scale: s0, opacity: 1 });
 
@@ -126,11 +126,11 @@ export default function Home() {
             },
           });
 
-          tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.12, rotate: 50, scale: s0 * 0.84, opacity: op, ease: 'none' })
-            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.22, rotate: 120, scale: s0 * 0.76, opacity: op, ease: 'none' })
-            .to(outer, { x: () => -vw() * (kx * 0.9), y: () => vh() * 0.3, rotate: 195, scale: s0 * 0.68, opacity: op, ease: 'none' })
-            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 285, scale: s0 * 0.66, opacity: op, ease: 'none' })
-            .to(outer, { x: 0, y: () => vh() * 0.3, rotate: 360, scale: s0 * 0.72, opacity: op, ease: 'power2.out' });
+          tl.to(outer, { x: () => -vw() * kx, y: () => vh() * 0.14, rotate: 55, scale: s0 * 0.82, opacity: op, ease: 'none' })
+            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.24, rotate: 130, scale: s0 * 0.72, opacity: op, ease: 'none' })
+            .to(outer, { x: () => -vw() * (kx * 0.85), y: () => vh() * 0.3, rotate: 210, scale: s0 * 0.64, opacity: op, ease: 'none' })
+            .to(outer, { x: () => vw() * kx, y: () => vh() * 0.34, rotate: 300, scale: s0 * 0.62, opacity: op, ease: 'none' })
+            .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
 
           return () => {
             gsap.set(outer, { clearProps: 'all' });
@@ -160,10 +160,10 @@ export default function Home() {
 
       {/* Fixed tooth + splash unit (all devices) — splash pops up, tooth drops from top, travels + rotates */}
       <div
-        className="fixed inset-0 pointer-events-none flex justify-center items-start pt-[9vh] md:items-center md:pt-0"
-        style={{ perspective: 1000, zIndex: 10 }}
+        className="fixed inset-0 z-30 pointer-events-none flex justify-center items-start overflow-hidden pt-[7vh] sm:pt-[8vh] md:pt-[10vh]"
+        style={{ perspective: 1000 }}
       >
-        <div className="relative w-[74vw] max-w-[330px] sm:max-w-[400px] md:max-w-[460px] lg:max-w-[520px] aspect-square">
+        <div className="relative w-[72vw] max-w-[300px] sm:max-w-[360px] md:max-w-[420px] lg:max-w-[480px] aspect-square">
           {/* Splash — Framer pops it up from behind on load; GSAP fades it on scroll (separate nodes, no transform conflict) */}
           <motion.div
             initial={{ scale: 0.2, opacity: 0 }}
@@ -268,12 +268,12 @@ export default function Home() {
               initial={{ opacity: 0, y: 40 }}
               animate={loading ? {} : { opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.55 }}
-              className="flex flex-wrap gap-3 sm:gap-4 lg:justify-end"
+              className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 lg:flex lg:flex-wrap lg:justify-end"
             >
               {stats.map((s) => (
-                <div key={s.label} className="glass-card rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 min-w-[104px] flex-1 sm:flex-none">
-                  <p className="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-primary leading-none">{s.value}</p>
-                  <p className="mt-2 text-xs sm:text-sm font-bold text-muted-foreground max-w-[130px]">{s.label}</p>
+                <div key={s.label} className="glass-card rounded-2xl px-4 py-3.5 sm:px-5 sm:py-4 min-w-0 lg:min-w-[120px]">
+                  <p className="text-2xl sm:text-3xl lg:text-5xl font-extrabold text-primary leading-none">{s.value}</p>
+                  <p className="mt-2 text-xs sm:text-sm font-bold text-muted-foreground">{s.label}</p>
                 </div>
               ))}
             </motion.div>
