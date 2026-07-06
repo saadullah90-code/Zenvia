@@ -133,27 +133,28 @@ export default function Home() {
         .to(outer, { x: 0, y: () => vh() * 0.28, rotate: 360, scale: s0 * 0.68, opacity: op, ease: 'power2.out' });
     });
 
-    // MOBILE (<768px): the tooth stays IN-FLOW in the hero (no travel, no x/y — so
-    // the clean stacked layout never shifts) but spins a full turn as the hero
-    // scrolls away, giving it the desktop-style scroll reaction without glitches.
+    // MOBILE (<768px): the tooth keeps its IN-FLOW layout slot (so the stacked hero
+    // never shifts) but MOVES with scroll — a scrubbed drift (x sway + downward y)
+    // plus a full 0->360 spin across the hero scroll range. It is transform-only (no
+    // layout change) and the appointment card sits LATER in the DOM, so the card
+    // always paints on TOP — the tooth glides behind it, never covering the copy.
     mm.add('(max-width: 767px)', () => {
       const el = mobileTooth.current;
       if (!el) return;
-      gsap.fromTo(
-        el,
-        { rotate: 0 },
-        {
-          rotate: 360,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: '#home',
-            start: 'top top',
-            end: 'bottom top',
-            scrub: 1,
-            invalidateOnRefresh: true,
-          },
+      const vh = () => window.innerHeight;
+      gsap.set(el, { x: 0, y: 0, rotate: 0 });
+      const tlm = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#home',
+          start: 'top top',
+          end: 'bottom top',
+          scrub: 1,
+          invalidateOnRefresh: true,
         },
-      );
+      });
+      tlm
+        .to(el, { x: 34, y: () => vh() * 0.12, rotate: 180, ease: 'none' })
+        .to(el, { x: -34, y: () => vh() * 0.26, rotate: 360, ease: 'none' });
     });
 
     const refreshId = window.setTimeout(() => ScrollTrigger.refresh(), 200);

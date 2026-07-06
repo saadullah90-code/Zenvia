@@ -35,12 +35,15 @@ tooth layer, and giant backdrop heading `hidden md:flex`. On MOBILE render an
 `md:hidden` IN-FLOW block at the TOP of the hero holding the giant "SMILE MATTERS"
 heading FIRST (visible fade-in), then the splash + tooth below it, then (in normal
 document flow) the appointment card, then the stats. The in-flow tooth still gets the intro
-(splash-pop + tooth-drop + idle-tilt, gated on `!loading`) and a scroll REACTION —
-a `gsap.matchMedia('(max-width:767px)')` scrubs a rotation-ONLY spin (0→360deg over
-the `#home` hero scroll range) on a dedicated `mobileTooth` node — but NO x/y/scale
-travel, so the mobile hero stays a clean vertical stack with nothing overlapping and
-no horizontal shift. Keep GSAP's scroll rotate, Framer's intro drop, and Framer's
-idle wobble on THREE separate nested nodes (one transform author per node).
+(splash-pop + tooth-drop + idle-tilt, gated on `!loading`) and IS scroll-reactive on
+mobile via a `gsap.matchMedia('(max-width:767px)')` scrubbed timeline that drifts
+(x sway + downward y) and spins it across the hero scroll range. Two rules make this
+safe where the old FIXED z-30 traveling tooth was not: (1) it is TRANSFORM-ONLY on an
+in-flow node, so the layout slot never changes — no stacked-hero shift, no horizontal
+scroll; (2) the appointment card is LATER in the DOM, so it always paints on top and
+the tooth glides BEHIND it instead of covering the copy. Keep GSAP's scroll transform,
+Framer's intro drop, and Framer's idle wobble on separate nested nodes (one transform
+author per node).
 **Why:** a `position:fixed` tooth that travels over every section floats ON TOP of
 the appointment card on small screens (covering the copy) and its x-transform can
 push the page right. An interim attempt ran the SAME fixed traveling animation on
